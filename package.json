@@ -2,9 +2,9 @@
   "name": "ghost-in-the-safe",
   "version": "0.0.1",
   "description": "Ghost in the (Maid)Safe is a browser-side-only ghost-themes CMS for the maidsafe network",
-  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "NODE_ENV=production webpack -p --config webpack.production.config.js --progress --profile",
+    "dev": "webpack-dev-server --progress --profile --watch --hot"
   },
   "repository": {
     "type": "git",
@@ -34,7 +34,14 @@
     "react-hot-loader": "^1.3.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "webpack": "^1.13.0",
-    "webpack-dev-server": "^1.14.1"
+    "webpack": "^2.1.0-beta.7",
+    "webpack-dev-server": "^2.1.0-beta.0"
+  },
+  "dependencies": {
+    "browserfs": "^0.5.12",
+    "ghost-render": "^1.1.0",
+    "muicss": "^0.5.9",
+    "react": "^15.0.2",
+    "react-dom": "^15.0.2"
   }
 }
