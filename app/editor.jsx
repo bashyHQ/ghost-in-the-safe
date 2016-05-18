@@ -24,6 +24,9 @@ class Editor extends React.Component {
       {this.props.children}
     </div>
   }
+  getContent(){
+    return this.pen.toMd();
+  }
   componentDidMount(){
     this.pen = new Pen({
       editor: this.refs['editor']

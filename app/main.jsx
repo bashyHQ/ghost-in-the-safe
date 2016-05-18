@@ -8,10 +8,14 @@ import Dropdown from 'muicss/lib/react/dropdown';
 import DropdownItem from 'muicss/lib/react/dropdown-item';
 
 import Editor from './editor.jsx';
+import { BrowserFS } from './files.jsx';
+
+let fs = window.require('fs');
 
 
 require('muicss/lib/css/mui.min.css');
 require('./styles.css');
+
 
 class GitS extends React.Component {
   constructor(props){
@@ -22,6 +26,19 @@ class GitS extends React.Component {
   }
   toggleSidedrawer() {
     this.setState({showSidedrawer: !!!this.state.showSidedrawer})
+  }
+
+  saveEditor(){
+    let content = this.refs['editor'].getContent();
+    console.log("saving")
+    console.log(content)
+    fs.writeFile('/sources/index.md', 'content', function(){
+      console.log(arguments);
+    });
+  }
+
+  compile(){
+    console.log("soon!")
   }
 
   render() {
@@ -66,15 +83,13 @@ class GitS extends React.Component {
           <span onClick={() => this.toggleSidedrawer()} className="sidedrawer-toggle icon">☰</span>
           <span className="mui--text-title">Ghost in the Safe</span>
           <Dropdown color="primary" label="actions">
-            <DropdownItem link="#/link1">Publish</DropdownItem>
-            <DropdownItem>Second</DropdownItem>
-            <DropdownItem>Third</DropdownItem>
-            <DropdownItem>Option 4</DropdownItem>
+            <DropdownItem onClick={() => this.saveEditor()}>Save</DropdownItem>
+            <DropdownItem onClick={() => this.compile()}>Publish</DropdownItem>
           </Dropdown>
         </Appbar>
       </header>
       <div id="content">
-        <Editor>
+        <Editor ref="editor">
           <h2>Other Test</h2>
         </Editor>
       </div>
