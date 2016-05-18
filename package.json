@@ -1,0 +1,27 @@
+{
+  "name": "ghost-in-the-safe",
+  "version": "0.0.1",
+  "description": "Ghost in the (Maid)Safe is a browser-side-only ghost-themes CMS for the maidsafe network",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ligthyear/ghost-in-the-safe.git"
+  },
+  "keywords": [
+    "maidsafe",
+    "ghost",
+    "cms",
+    "content-management",
+    "content-management-system",
+    "browser"
+  ],
+  "author": "Benjamin Kampmann ( https://github.com/ligthyear )",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/ligthyear/ghost-in-the-safe/issues"
+  },
+  "homepage": "https://github.com/ligthyear/ghost-in-the-safe#readme"
+}
