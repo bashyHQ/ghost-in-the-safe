@@ -24,6 +24,7 @@ buttons {
 
 #content {
   transition: margin-left .35s;
+  margin-top: 80px;
 }
 
 .mui-appbar {

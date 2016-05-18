@@ -7,6 +7,8 @@ import Container from 'muicss/lib/react/container';
 import Dropdown from 'muicss/lib/react/dropdown';
 import DropdownItem from 'muicss/lib/react/dropdown-item';
 
+import Editor from './editor.jsx';
+
 
 require('muicss/lib/css/mui.min.css');
 require('./styles.css');
@@ -72,7 +74,9 @@ class GitS extends React.Component {
         </Appbar>
       </header>
       <div id="content">
-        Content
+        <Editor>
+          <h2>Other Test</h2>
+        </Editor>
       </div>
       <footer id="footer">
         <Container fluid={true}>
