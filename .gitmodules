@@ -1,3 +1,6 @@
 [submodule "lib/pen"]
 	path = lib/pen
 	url = https://github.com/sofish/pen.git
+[submodule "lib/statical-ghost"]
+	path = lib/statical-ghost
+	url = https://github.com/ligthyear/statical-ghost.git
