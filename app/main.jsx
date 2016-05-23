@@ -7,11 +7,10 @@ import Container from 'muicss/lib/react/container';
 import Dropdown from 'muicss/lib/react/dropdown';
 import DropdownItem from 'muicss/lib/react/dropdown-item';
 
-import Editor from './editor.jsx';
-import { BrowserFS } from './files.jsx';
-import render from './ghost.jsx';
 
-let fs = window.require('fs');
+import { BrowserFS } from './files.jsx';
+import Editor from './editor.jsx';
+import render from './ghost.jsx';
 
 
 require('muicss/lib/css/mui.min.css');
@@ -23,6 +22,7 @@ class GitS extends React.Component {
     super(props)
     this.state = {
       showSidedrawer: true,
+      selectedFile: null,
       posts: [],
       files: []
     }
@@ -33,26 +33,23 @@ class GitS extends React.Component {
 
   updateListing(){
     fs.readdir("/posts/", (err, files)=> {
-      console.log(files);
       this.setState({posts: files})
     })
     fs.readdir("/files/", (err, files)=> {
-      console.log(files);
       this.setState({files: files})
     })
   }
 
-  saveEditor(){
-    let content = this.refs['editor'].getContent();
-    console.log("saving")
-    console.log(content)
-    fs.writeFile('/sources/index.md', 'content', function(){
-      console.log(arguments);
-    });
+  onEditorUpdate(){
+    this.updateListing()
   }
 
   compile(){
     console.log("soon!")
+  }
+
+  selectPost(filename){
+    this.setState({selectedFile: filename})
   }
 
   componentWillMount(){
@@ -62,7 +59,6 @@ class GitS extends React.Component {
   }
 
   render() {
-    console.log(this.state.posts)
     return (
       <div className={this.state.showSidedrawer ? 'show-sidedrawer' : 'hidden-sidedrawer'}>
       <div id="sidedrawer" className={this.state.showSidedrawer ? 'active' : 'hide'}>
@@ -77,7 +73,8 @@ class GitS extends React.Component {
             <li>
               <strong>Posts</strong>
               <ul>{this.state.posts.map((f) =>
-                <li><a href="#">{f}</a></li>
+                <li className={this.state.selectedFile == f ? 'selected' : ''}>
+                  <a onClick={() => this.selectPost(f)}>{f}</a></li>
               )}
                 <li><a href="#">Add +</a></li>
               </ul>
@@ -104,9 +101,7 @@ class GitS extends React.Component {
         </Appbar>
       </header>
       <div id="content">
-        <Editor ref="editor">
-          <h2>Other Test</h2>
-        </Editor>
+        <Editor filename={this.state.selectedFile} />
       </div>
       <footer id="footer">
         <Container fluid={true}>
