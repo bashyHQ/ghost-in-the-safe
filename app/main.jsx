@@ -9,6 +9,7 @@ import DropdownItem from 'muicss/lib/react/dropdown-item';
 
 import Editor from './editor.jsx';
 import { BrowserFS } from './files.jsx';
+import render from './ghost.jsx';
 
 let fs = window.require('fs');
 
@@ -21,11 +22,24 @@ class GitS extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      showSidedrawer: true
+      showSidedrawer: true,
+      posts: [],
+      files: []
     }
   }
   toggleSidedrawer() {
     this.setState({showSidedrawer: !!!this.state.showSidedrawer})
+  }
+
+  updateListing(){
+    fs.readdir("/posts/", (err, files)=> {
+      console.log(files);
+      this.setState({posts: files})
+    })
+    fs.readdir("/files/", (err, files)=> {
+      console.log(files);
+      this.setState({files: files})
+    })
   }
 
   saveEditor(){
@@ -41,7 +55,14 @@ class GitS extends React.Component {
     console.log("soon!")
   }
 
+  componentWillMount(){
+    // fs.watch("/posts", ()=> this.updateListing())
+    // fs.watch("/files", ()=> this.updateListing())
+    this.updateListing()
+  }
+
   render() {
+    console.log(this.state.posts)
     return (
       <div className={this.state.showSidedrawer ? 'show-sidedrawer' : 'hidden-sidedrawer'}>
       <div id="sidedrawer" className={this.state.showSidedrawer ? 'active' : 'hide'}>
@@ -51,28 +72,22 @@ class GitS extends React.Component {
           </div>
           <div className="mui-divider"></div>
           <ul>
+            <li><strong><a href="#">Configuration</a></strong>
+            </li>
             <li>
-              <strong>Category 1</strong>
-              <ul>
-                <li><a href="#">Item 1</a></li>
-                <li><a href="#">Item 2</a></li>
-                <li><a href="#">Item 3</a></li>
+              <strong>Posts</strong>
+              <ul>{this.state.posts.map((f) =>
+                <li><a href="#">{f}</a></li>
+              )}
+                <li><a href="#">Add +</a></li>
               </ul>
             </li>
             <li>
-              <strong>Category 2</strong>
-              <ul>
-                <li><a href="#">Item 1</a></li>
-                <li><a href="#">Item 2</a></li>
-                <li><a href="#">Item 3</a></li>
-              </ul>
-            </li>
-            <li>
-              <strong>Category 3</strong>
-              <ul>
-                <li><a href="#">Item 1</a></li>
-                <li><a href="#">Item 2</a></li>
-                <li><a href="#">Item 3</a></li>
+              <strong>Files</strong>
+              <ul>{this.state.files.map((f) =>
+                <li><a href="#">{f}</a></li>
+              )}
+                <li><a href="#">Add +</a></li>
               </ul>
             </li>
           </ul>

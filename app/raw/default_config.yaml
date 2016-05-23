@@ -1,0 +1,50 @@
+blog:
+  url: 'http://localhost:8080'
+  title: My Blog
+  description: Keep It Simple and Stupid.
+  logo: ''
+  cover: ''
+  navigation:
+    - label: Index
+      url: /
+theme: frostmango
+deploy: git add -A;git commit -m 'new post';git push origin master;
+# routeKeywords: # link 'author' in http://localhost:8080/author/me
+#   tag: tag
+#   author: author
+#   page: page
+paths:
+  # subdir: 'blog'    #subdir for all urls, like "http://localhost:8080/blog/author/me"
+  # imagesRelPath: '' not use yet
+  posts: /posts # directory for your posts
+  public: /public # directory for generated site
+  tmp: /tmp # temp directory for speed up
+  themes: /themes # directory for themes
+posts:
+  limit: 5   # the number of posts in each page
+  permalinks: '/:year/:month/:day/:slug/' # link of post
+author: me # default author
+authors: #other authors
+  me:
+    name: me
+    slug: me
+    bio: Think
+    # image: ''
+    # cover: ''
+    # website: ''
+    # location: Beijing
+    # meta_title: ''
+    # meta_description: ''
+tags: # all tags, it would be auto appended after appear in posts
+  # hello:
+  #   name: hello
+  #   slug: hello
+  #   description: ''
+  #   image: ''
+  #   hidden: ''
+  #   meta_title: test
+  #   meta_description: test
+  #   parent: ''
+  world:
+    name: world
+    slug: world

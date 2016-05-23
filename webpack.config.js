@@ -13,8 +13,16 @@ module.exports = {
 		path: path.join(__dirname, 'public'),
 		filename: 'app.js'
 	},
+  externals : ['fs'],
+  // "browser": {
+  //   "fs": "window.require('fs')"
+  // },
+  // "node": {
+  //   "fs": "empty"
+  // },
 	resolve: {
-		extensions: ['', '.js', '.jsx']
+		extensions: ['', '.js', '.jsx'],
+    modulesDirectories: ['node_modules']
 	},
 	module: {
 		loaders: loaders
@@ -26,6 +34,9 @@ module.exports = {
 			inline: true
 		},
 	plugins: [
-		new webpack.NoErrorsPlugin()
+		new webpack.NoErrorsPlugin(),
+  //   new webpack.ProvidePlugin({
+  //     'fs': "window.fs",
+  // })
 	]
 };

@@ -1,10 +1,26 @@
 module.exports = [
 	{
 		test: /\.jsx?$/,
-		exclude: /(node_modules|bower_components)/,
+		exclude: /(node_modules|bower_components|lib)/,
 		loaders: ['react-hot', 'babel'],
 	},
-
+	{
+		test: /\.js?$/,
+		exclude: /(node_modules|lib)/,
+		loaders: 'imports-loader',
+	},
+	{
+		test: /\.json$/,
+		loader: 'json-loader'
+	},
+	{
+		test: /(app\/raw\/.*|\.yaml$)/,
+		loader: 'raw-loader'
+	},
+	{
+		test: /\.zip$/,
+		loader: 'buffer-loader'
+	},
 	{
 		test: /\.css$/,
 		loader: 'style-loader!css-loader'
