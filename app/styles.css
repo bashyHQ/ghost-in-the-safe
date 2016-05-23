@@ -173,13 +173,24 @@ buttons {
 }
 
 #sidedrawer strong {
-  display: block;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
   padding: 15px 22px;
   cursor: pointer;
 }
 
 #sidedrawer strong:hover {
   background-color: #E0E0E0;
+}
+
+#sidedrawer ul {
+  transform-origin: top;
+  transition: transform 0.26s ease;
+}
+#sidedrawer ul.hide {
+  transform: scaleY(0);
+  height: 0
 }
 
 #sidedrawer strong + ul > li {

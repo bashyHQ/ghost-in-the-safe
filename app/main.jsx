@@ -24,7 +24,9 @@ class GitS extends React.Component {
       showSidedrawer: true,
       selectedFile: null,
       posts: [],
-      files: []
+      files: [],
+      showPosts: true,
+      showFiles: false
     }
   }
   toggleSidedrawer() {
@@ -68,23 +70,19 @@ class GitS extends React.Component {
           </div>
           <div className="mui-divider"></div>
           <ul>
-            <li><strong><a href="#">Configuration</a></strong>
-            </li>
             <li>
-              <strong>Posts</strong>
-              <ul>{this.state.posts.map((f) =>
+              <strong><span onClick={()=> this.setState({showPosts : !this.state.showPosts}) }>Posts</span><Button size="small" color="primary" variant="flat" onClick={() => this.addPost()}>+</Button></strong>
+              <ul className={this.state.showPosts? 'show' : 'hide' }>{this.state.posts.map((f) =>
                 <li className={this.state.selectedFile == f ? 'selected' : ''}>
                   <a onClick={() => this.selectPost(f)}>{f}</a></li>
               )}
-                <li><a href="#">Add +</a></li>
               </ul>
             </li>
             <li>
-              <strong>Files</strong>
-              <ul>{this.state.files.map((f) =>
+              <strong><span onClick={()=> this.setState({showFiles : !this.state.showFiles}) }>Files</span><Button size="small" color="primary" variant="flat" onClick={() => this.addPost()}>+</Button></strong>
+              <ul className={this.state.showFiles? 'show' : 'hide' }>{this.state.files.map((f) =>
                 <li><a href="#">{f}</a></li>
               )}
-                <li><a href="#">Add +</a></li>
               </ul>
             </li>
           </ul>
@@ -95,7 +93,7 @@ class GitS extends React.Component {
           <span onClick={() => this.toggleSidedrawer()} className="sidedrawer-toggle icon">☰</span>
           <span className="mui--text-title">Ghost in the Safe</span>
           <Dropdown color="primary" label="actions">
-            <DropdownItem onClick={() => this.saveEditor()}>Save</DropdownItem>
+            <DropdownItem onClick={() => this.saveEditor()}>Configure</DropdownItem>
             <DropdownItem onClick={() => this.compile()}>Publish</DropdownItem>
           </Dropdown>
         </Appbar>
