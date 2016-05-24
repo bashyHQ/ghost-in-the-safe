@@ -18,9 +18,15 @@ BrowserFS.initialize(fsroot)
 let fs = window.fs = window.require('fs');
 let JSZip = require('jszip');
 
+
+try {
+  fs.mkdirSync('/posts')
+  // if we are creating the first time, add file
+  fs.writeFileSync('/posts/example.md', require("./raw/example.md"))
+} catch (EEXIST) { };
+
 // ensure the following paths exist
 ['/files',
- '/posts',
  '/tmp',
  '/helpers',
  '/helpers/tpl',
@@ -31,20 +37,17 @@ let JSZip = require('jszip');
     fs.mkdirSync(f)
   } catch (EEXIST) { }
 })
+if (!fs.existsSync('/config.yaml')) fs.writeFileSync('/config.yaml', require("./raw/default_config.yaml"))
 
-fs.writeFileSync('/config.yaml', require("./raw/default_config.yaml"))
 fs.writeFileSync('/types/mime.types', require("./raw/mime.types"))
 fs.writeFileSync('/types/node.types', "")
 
 fs.writeFileSync('/helpers/tpl/navigation.hbs', require("./raw/tpl/navigation.hbs"))
 fs.writeFileSync('/helpers/tpl/pagination.hbs', require("./raw/tpl/pagination.hbs"))
-
-// we start with a minimal of an example post
-fs.writeFileSync('/posts/example.md', require("./raw/example.md"))
 fs.writeFileSync('/public/public/jquery.min.js', require("./raw/jquery.min.js"))
 
+
 function _walkForZip(zip, path){
-  console.log("walking", path)
   fs.readdirSync(path).forEach(function(child){
     var childFile = path + '/' + child
     var stat = fs.statSync(childFile)
@@ -53,20 +56,16 @@ function _walkForZip(zip, path){
       _walkForZip(folder, childFile)
     } else {
       let content = fs.readFileSync(childFile)
-      console.log("adding file", child, content)
       zip.file(child, content.data.buff.buffer)
     }
   })
 }
 
 function makeZip() {
-  console.log("starting zipping")
   var zip = new JSZip()
   _walkForZip(zip, '/public')
-  console.log("done adding files")
   zip.generateAsync({type:"base64"}).then(function (base64) {
-    console.log("starting download")
-    location.href="data:application/zip;base64," + base64;
+    window.open("data:application/zip;base64," + base64, "download")
   }).catch(function (err){ console.error(err) });
 }
 

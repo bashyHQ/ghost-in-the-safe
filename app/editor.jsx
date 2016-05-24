@@ -45,12 +45,17 @@ class Editor extends React.Component{
 
   setContent(content){
     var match = content.match(/^([\w\W]*?)\n\s*\-{3,}\s*/)
-    console.log(content, match)
     let post = yaml.safeLoad(match[1])
     let markdown = content.substring(match[0].length)
     this.setState({loading: false,
                    content: md.render(markdown),
                    config: post})
+  }
+
+  updateConfig(key, value){
+    let config = this.state.config
+    config[key] = value
+    this.setState({config: config})
   }
 
   render(){
@@ -60,59 +65,64 @@ class Editor extends React.Component{
     if (!this.props.filename){
       return <div>Please select the file you want to edit</div>
     }
-    return (<Form className="mui-container-fluid">
+    return (<Form className="mui-container-fluid" onSubmit={this.save.bind(this)}>
               <div style={{display: "flex"}}>
                 <legend><Input
                   ref="title"
                   label={"Title (" + this.props.filename + ")"}
                   required={true}
-                  defaultValue={this.state.config.title}
+                  onChange={(evt) => this.updateConfig('title', evt.target.value)}
+                  value={this.state.config.title}
                   floatingLabel={true}/></legend>
-                <Button variant="raised" color="primary">Save Post</Button>
+                <Button variant="raised" onClick={this.save.bind(this)} color="primary">Save Post</Button>
               </div>
               <Tabs initialSelectedIndex={1}>
                 <Tab label="Metadata">
                   <Panel>
                     <div style={{display: "flex", 'align-items': 'baseline'}}>
                       <strong>Post Type:</strong>
-                      <Radio ref="postType" label="Usual Post" defaultChecked={!this.state.config.page && !this.state.config.top} />
-                      <Radio ref="postType" label="Top Post"  defaultChecked={ this.state.config.top} />
-                      <Radio ref="postType" label="Static Page"  defaultChecked={ this.state.config.page} />
+                      <Radio name="postType" value="post" ref="postType" label="Usual Post" defaultChecked={!this.state.config.page && !this.state.config.top} />
+                      <Radio name="postType" value="top" ref="postType" label="Top Post"  defaultChecked={ this.state.config.top} />
+                      <Radio name="postType" value="page" ref="postType" label="Static Page" defaultChecked={ this.state.config.page} />
                     </div>
 
                     <Input
                       ref="slug"
                       label="URL-Slug (no-spaces)"
                       required={true}
-                      defaultValue={this.state.config.slug}
+                      onChange={(evt) => this.updateConfig('slug', evt.target.value)}
+                      value={this.state.config.slug}
                       floatingLabel={true}/>
                     <Input
                       ref="date"
                       label="Date (YYYY-MM-DD HH:MM:SS)"
-                      defaultValue={this.state.config.date}
+                      onChange={(evt) => this.updateConfig('date', evt.target.value)}
+                      value={this.state.config.date}
                       floatingLabel={true}/>
                     <Input
                       ref="author"
                       label="Author"
-                      defaultValue={this.state.config.author}
+                      onChange={(evt) => this.updateConfig('author', evt.target.value)}
+                      value={this.state.config.author}
                       floatingLabel={true}/>
 
                     <Input
                       ref="tags"
                       label="Tags (comma separated)"
-                      defaultValue={this.state.config.tags ? this.state.config.tags .join(', ') : ''}
+                      onChange={(evt) => this.updateConfig('tags', evt.target.value.split(','))}
+                      value={this.state.config.tags ? this.state.config.tags .join(', ') : ''}
                       floatingLabel={true}/>
                   </Panel>
                 </Tab>
 
                 <Tab label="Content">
                   <Panel>
-                    <PenWrap content={this.state.content} />
+                    <PenWrap ref="editor" content={this.state.content} />
                   </Panel>
                 </Tab>
               </Tabs>
               <div className="mui--text-right">
-                <Button variant="raised" color="primary">Save Post</Button>
+                <Button variant="raised" onClick={this.save.bind(this)} color="primary">Save Post</Button>
               </div>
             </Form>)
   }
@@ -124,6 +134,17 @@ class Editor extends React.Component{
         this.setState({content: null, loading: false})
       }
     }
+  }
+
+  save(ev){
+    ev.preventDefault()
+    let content = yaml.safeDump(this.state.config) + "\n---\n" + this.refs.editor.getContent()
+
+    console.log(content)
+
+    fs.writeFile ('/posts/' + this.props.filename, content, (err) =>
+      err ? console.log(err) : (this.props.onSave ? this.props.onSave() : null)
+    )
   }
 
   load(filename){

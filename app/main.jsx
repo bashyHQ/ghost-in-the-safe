@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Appbar from 'muicss/lib/react/appbar';
 import Button from 'muicss/lib/react/button';
+import Checkbox from 'muicss/lib/react/checkbox';
 import Container from 'muicss/lib/react/container';
 
 import Dropdown from 'muicss/lib/react/dropdown';
@@ -25,7 +26,8 @@ class GitS extends React.Component {
       posts: [],
       files: [],
       showPosts: true,
-      showFiles: false
+      showFiles: false,
+      compileOnSave: true,
     }
   }
   toggleSidedrawer() {
@@ -47,12 +49,9 @@ class GitS extends React.Component {
 
   compile(){
     render();
-    console.log(fs.readdirSync('/public'))
   }
 
   export() {
-    render();
-    console.log(makeZip);
     makeZip();
   }
 
@@ -64,6 +63,14 @@ class GitS extends React.Component {
     // fs.watch("/posts", ()=> this.updateListing())
     // fs.watch("/files", ()=> this.updateListing())
     this.updateListing()
+  }
+
+  onSave(){
+    console.log("was saved");
+    if (this.state.compileOnSave){
+      console.log("compiling");
+      this.compile();
+    }
   }
 
   render() {
@@ -100,13 +107,20 @@ class GitS extends React.Component {
           <span className="mui--text-title">Ghost in the Safe</span>
           <Dropdown color="primary" label="actions">
             <DropdownItem onClick={() => this.saveEditor()}>Configure</DropdownItem>
+            <DropdownItem >
+              <Checkbox
+                onChange={() => this.setState({compileOnSave: ! this.state.compileOnSave})}
+                checked={this.state.compileOnSave}
+                label="compile on save"
+              />
+            </DropdownItem>
             <DropdownItem onClick={() => this.compile()}>Publish</DropdownItem>
             <DropdownItem onClick={() => this.export()}>Export</DropdownItem>
           </Dropdown>
         </Appbar>
       </header>
       <div id="content">
-        <Editor filename={this.state.selectedFile} />
+        <Editor onSave={()=> this.onSave()} filename={this.state.selectedFile} />
       </div>
       <footer id="footer">
         <Container fluid={true}>
