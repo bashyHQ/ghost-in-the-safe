@@ -4,7 +4,8 @@
   "description": "Ghost in the (Maid)Safe is a browser-side-only ghost-themes CMS for the maidsafe network",
   "scripts": {
     "build": "NODE_ENV=production webpack -p --config webpack.production.config.js --progress --profile",
-    "dev": "webpack-dev-server --progress --profile --watch --hot"
+    "dev": "webpack-dev-server --progress --profile --watch --hot",
+    "postinstall": "npm install lib/statical-ghost"
   },
   "repository": {
     "type": "git",
@@ -43,7 +44,6 @@
   },
   "dependencies": {
     "browserfs": "^0.5.12",
-    "filesaverjs": "^0.2.2",
     "ghost-render": "^1.1.0",
     "glob": "^7.0.3",
     "handlebars": "^4.0.5",
@@ -51,7 +51,6 @@
     "lodash": "^3.10.1",
     "muicss": "^0.5.9",
     "react": "^15.0.2",
-    "react-dom": "^15.0.2",
-    "statical-ghost": "file:lib/statical-ghost"
+    "react-dom": "^15.0.2"
   }
 }
