@@ -16,20 +16,23 @@ fsroot.mount('/themes/decent', new BrowserFS.FileSystem.ZipFS(require('../lib/de
 
 BrowserFS.initialize(fsroot)
 
-let fs = window.fs = window.require('fs')
+let fs = window.fs = window.require('fs');
 
-
-try {
-  fs.mkdirSync('/files')
-} catch(EEXIST){}
+// ensure the following paths exist
+['/files', '/posts', '/tmp', '/helpers', '/helpers/tpl'].forEach(function (f, idx) {
+  try {
+    fs.mkdirSync(f)
+  } catch(EEXIST){}
+})
 
 fs.writeFileSync('/config.yaml', require("./raw/default_config.yaml"))
 fs.writeFileSync('/types/mime.types', require("./raw/mime.types"))
 fs.writeFileSync('/types/node.types', "")
 
-try {
-  fs.mkdirSync('/posts')
-} catch(EEXIST){}
+fs.writeFileSync('/helpers/tpl/navigation.hbs', require("./raw/tpl/navigation.hbs"))
+fs.writeFileSync('/helpers/tpl/pagination.hbs', require("./raw/tpl/pagination.hbs"))
+
+// we start with a minimal of an example post
 fs.writeFileSync('/posts/example.md', require("./raw/example.md"))
 
 

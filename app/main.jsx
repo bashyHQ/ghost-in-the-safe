@@ -47,7 +47,8 @@ class GitS extends React.Component {
   }
 
   compile(){
-    console.log("soon!")
+    render();
+    console.log(fs.readdirSync('/public'))
   }
 
   selectPost(filename){

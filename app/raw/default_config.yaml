@@ -7,7 +7,7 @@ blog:
   navigation:
     - label: Index
       url: /
-theme: frostmango
+theme: decent
 deploy: git add -A;git commit -m 'new post';git push origin master;
 # routeKeywords: # link 'author' in http://localhost:8080/author/me
 #   tag: tag

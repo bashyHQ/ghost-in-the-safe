@@ -46,6 +46,7 @@
     "ghost-render": "^1.1.0",
     "glob": "^7.0.3",
     "handlebars": "^4.0.5",
+    "lodash": "^3.10.1",
     "muicss": "^0.5.9",
     "react": "^15.0.2",
     "react-dom": "^15.0.2",
