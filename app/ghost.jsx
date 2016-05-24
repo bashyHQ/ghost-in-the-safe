@@ -8,6 +8,7 @@ function render (input, output) {
     if (task.rss) {
       fs.writeFile(task.path, task.rss, 'utf-8',
         function (err) {
+          // FIXME: this currently fails
           err && console.error(err)
         })
     } else {

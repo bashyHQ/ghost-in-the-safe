@@ -13,13 +13,7 @@ module.exports = {
 		path: path.join(__dirname, 'public'),
 		filename: 'app.js'
 	},
-  externals : ['fs'],
-  // "browser": {
-  //   "fs": "window.require('fs')"
-  // },
-  // "node": {
-  //   "fs": "empty"
-  // },
+  externals: ['fs', {'./jszip': 'jszip'} ],
 	resolve: {
 		extensions: ['', '.js', '.jsx'],
     modulesDirectories: ['node_modules']

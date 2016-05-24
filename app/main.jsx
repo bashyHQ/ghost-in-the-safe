@@ -7,8 +7,7 @@ import Container from 'muicss/lib/react/container';
 import Dropdown from 'muicss/lib/react/dropdown';
 import DropdownItem from 'muicss/lib/react/dropdown-item';
 
-
-import { BrowserFS } from './files.jsx';
+import { makeZip } from './files.jsx';
 import Editor from './editor.jsx';
 import render from './ghost.jsx';
 
@@ -49,6 +48,12 @@ class GitS extends React.Component {
   compile(){
     render();
     console.log(fs.readdirSync('/public'))
+  }
+
+  export() {
+    render();
+    console.log(makeZip);
+    makeZip();
   }
 
   selectPost(filename){
@@ -96,6 +101,7 @@ class GitS extends React.Component {
           <Dropdown color="primary" label="actions">
             <DropdownItem onClick={() => this.saveEditor()}>Configure</DropdownItem>
             <DropdownItem onClick={() => this.compile()}>Publish</DropdownItem>
+            <DropdownItem onClick={() => this.export()}>Export</DropdownItem>
           </Dropdown>
         </Appbar>
       </header>
