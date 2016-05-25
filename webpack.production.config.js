@@ -10,6 +10,7 @@ module.exports = {
 		path: path.join(__dirname, 'public'),
 		filename: 'app.js'
 	},
+  externals: ['fs', {'./jszip': 'jszip'} ],
 	resolve: {
 		extensions: ['', '.js', '.jsx']
 	},

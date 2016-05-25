@@ -1,5 +1,9 @@
 module.exports = [
 	{
+		test: /(app\/raw\/.*|\.yaml$)/,
+		loader: 'raw-loader'
+	},
+	{
 		test: /\.jsx?$/,
 		exclude: /(node_modules|bower_components|lib)/,
 		loaders: ['react-hot', 'babel'],
@@ -12,10 +16,6 @@ module.exports = [
 	{
 		test: /\.json$/,
 		loader: 'json-loader'
-	},
-	{
-		test: /(app\/raw\/.*|\.yaml$)/,
-		loader: 'raw-loader'
 	},
 	{
 		test: /\.zip$/,
