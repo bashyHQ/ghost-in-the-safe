@@ -8,13 +8,32 @@ import Container from 'muicss/lib/react/container';
 import Dropdown from 'muicss/lib/react/dropdown';
 import DropdownItem from 'muicss/lib/react/dropdown-item';
 
-import { makeZip } from './files.jsx';
+import { makeZip, installTheme, initFS } from './files.jsx';
 import Editor from './editor.jsx';
 import render from './ghost.jsx';
 
-
 require('muicss/lib/css/mui.min.css');
 require('./styles.css');
+let version = require('../package.json').version;
+require('safenet');
+
+let SafeApp = window.SafeApp;
+console.log(SafeApp);
+
+
+SafeApp.log = console.log.bind(console);
+
+
+let safeInstance = new SafeApp({    // App Info
+  'id': 'ghost-in-the-safe',
+  'name': 'Ghost In the Safe',
+  'vendor': 'Benjamin Kampmann',
+  'version': version,
+}, ['SAFE_DRIVE_ACCESS']  // Permissions
+);
+
+// FIXME: it appears some lib internals expect that to be the case
+window.Safe = safeInstance;
 
 
 class GitS extends React.Component {
@@ -23,6 +42,7 @@ class GitS extends React.Component {
     this.state = {
       showSidedrawer: true,
       selectedFile: null,
+      state: "loading",
       posts: [],
       files: [],
       showPosts: true,
@@ -48,6 +68,7 @@ class GitS extends React.Component {
   }
 
   compile(){
+    installTheme('decent');
     render();
   }
 
@@ -63,6 +84,14 @@ class GitS extends React.Component {
     // fs.watch("/posts", ()=> this.updateListing())
     // fs.watch("/files", ()=> this.updateListing())
     this.updateListing()
+    this.setState({"state": "authorising"})
+    this.props.safe.auth.authorize().then(() => {
+        this.setState({"state": "setup"})
+        initFS(this.props.safe)
+        this.setState({"state": "ready"})
+      }, (err) => {
+        this.setState({"state": "failed", "error": err})
+    });
   }
 
   onSave(){
@@ -74,6 +103,16 @@ class GitS extends React.Component {
   }
 
   render() {
+    let state = this.state.state;
+
+    if (state === 'loading') {
+      return <div>Loading Ghost in the Safe ...</div>
+    } else if (state === 'authorising') {
+      return <div>Please authorise 'Ghost in the Safe' in your Safe Launcher!</div>
+    } else if (state === 'failed') {
+      return <div>Authorising failed: {this.state.error}</div>
+    }
+
     return (
       <div className={this.state.showSidedrawer ? 'show-sidedrawer' : 'hidden-sidedrawer'}>
       <div id="sidedrawer" className={this.state.showSidedrawer ? 'active' : 'hide'}>
@@ -133,4 +172,4 @@ class GitS extends React.Component {
   }
 }
 
-ReactDOM.render(<GitS />, document.body);
+ReactDOM.render(<GitS safe={safeInstance}/>, document.body);

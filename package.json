@@ -51,6 +51,8 @@
     "lodash": "^3.10.1",
     "muicss": "^0.5.9",
     "react": "^15.0.2",
-    "react-dom": "^15.0.2"
+    "react-dom": "^15.0.2",
+    "safenet": "0.0.1",
+    "tweetnacl": "^0.14.3"
   }
 }

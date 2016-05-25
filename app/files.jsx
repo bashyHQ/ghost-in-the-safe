@@ -18,34 +18,34 @@ BrowserFS.initialize(fsroot)
 let fs = window.fs = window.require('fs');
 let JSZip = require('jszip');
 
-
-try {
-  fs.mkdirSync('/posts')
-  // if we are creating the first time, add file
-  fs.writeFileSync('/posts/example.md', require("./raw/example.md"))
-} catch (EEXIST) { };
-
-// ensure the following paths exist
-['/files',
- '/tmp',
- '/helpers',
- '/helpers/tpl',
- '/public/assets',
- '/public/public'
-].forEach(function (f, idx) {
+function initFS(safeApp) {
   try {
-    fs.mkdirSync(f)
-  } catch (EEXIST) { }
-})
-if (!fs.existsSync('/config.yaml')) fs.writeFileSync('/config.yaml', require("./raw/default_config.yaml"))
+    fs.mkdirSync('/posts')
+    // if we are creating the first time, add file
+    fs.writeFileSync('/posts/example.md', require("./raw/example.md"))
+  } catch (EEXIST) { };
 
-fs.writeFileSync('/types/mime.types', require("./raw/mime.types"))
-fs.writeFileSync('/types/node.types', "")
+  // ensure the following paths exist
+  ['/files',
+   '/tmp',
+   '/helpers',
+   '/helpers/tpl',
+   '/public/assets',
+   '/public/public'
+  ].forEach(function (f, idx) {
+    try {
+      fs.mkdirSync(f)
+    } catch (EEXIST) { }
+  })
+  if (!fs.existsSync('/config.yaml')) fs.writeFileSync('/config.yaml', require("./raw/default_config.yaml"))
 
-fs.writeFileSync('/helpers/tpl/navigation.hbs', require("./raw/tpl/navigation.hbs"))
-fs.writeFileSync('/helpers/tpl/pagination.hbs', require("./raw/tpl/pagination.hbs"))
-fs.writeFileSync('/public/public/jquery.min.js', require("./raw/jquery.min.js"))
+  fs.writeFileSync('/types/mime.types', require("./raw/mime.types"))
+  fs.writeFileSync('/types/node.types', "")
 
+  fs.writeFileSync('/helpers/tpl/navigation.hbs', require("./raw/tpl/navigation.hbs"))
+  fs.writeFileSync('/helpers/tpl/pagination.hbs', require("./raw/tpl/pagination.hbs"))
+  fs.writeFileSync('/public/public/jquery.min.js', require("./raw/jquery.min.js"))
+}
 
 function _walkForZip(zip, path){
   fs.readdirSync(path).forEach(function(child){
@@ -85,6 +85,4 @@ function installTheme (theme) {
     })
 }
 
-installTheme('decent')
-
-export { makeZip, installTheme }
+export { makeZip, installTheme, initFS }
