@@ -1,8 +1,11 @@
-let render_tasks = require('../lib/statical-ghost/lib/task/')
-let View = require('../lib/statical-ghost/lib/view/')
+let render_tasks = require('statical-ghost/lib/task/')
+let View = require('statical-ghost/lib/view/')
+var baseModel = require('statical-ghost/lib/model/base_model')
+
 let fs = require('fs')
 
 function render (input, output) {
+  baseModel.init()
   render_tasks.getTasks().forEach(function (task, idx) {
     let view = View()
     if (task.rss) {
