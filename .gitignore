@@ -1,3 +1,5 @@
 node_modules
 public/*
 npm-debug.log
+.DS_Store
+safe_launcher.app
