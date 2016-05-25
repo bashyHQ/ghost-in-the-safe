@@ -8,14 +8,14 @@ import Container from 'muicss/lib/react/container';
 import Dropdown from 'muicss/lib/react/dropdown';
 import DropdownItem from 'muicss/lib/react/dropdown-item';
 
-import { makeZip, installTheme, initFS } from './files.jsx';
+import { makeZip, installTheme, initFS, publish } from './files.jsx';
 import Editor from './editor.jsx';
 import render from './ghost.jsx';
 
 require('muicss/lib/css/mui.min.css');
 require('./styles.css');
 let version = require('../package.json').version;
-require('safenet');
+require('safenet/src/index.js');
 
 let SafeApp = window.SafeApp;
 console.log(SafeApp);
@@ -70,6 +70,13 @@ class GitS extends React.Component {
   compile(){
     installTheme('decent');
     render();
+  }
+
+  publish() {
+    this.compile()
+    publish(this.props.safe.nfs, '/public'
+      ).then(console.log.bind(console)
+    ).catch(console.error.bind(console))
   }
 
   export() {
@@ -153,7 +160,7 @@ class GitS extends React.Component {
                 label="compile on save"
               />
             </DropdownItem>
-            <DropdownItem onClick={() => this.compile()}>Publish</DropdownItem>
+            <DropdownItem onClick={() => this.publish()}>Publish</DropdownItem>
             <DropdownItem onClick={() => this.export()}>Export</DropdownItem>
           </Dropdown>
         </Appbar>

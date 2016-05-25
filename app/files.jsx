@@ -18,7 +18,8 @@ BrowserFS.initialize(fsroot)
 let fs = window.fs = window.require('fs');
 let JSZip = require('jszip');
 
-function initFS(safeApp) {
+
+function initFS() {
   try {
     fs.mkdirSync('/posts')
     // if we are creating the first time, add file
@@ -45,6 +46,8 @@ function initFS(safeApp) {
   fs.writeFileSync('/helpers/tpl/navigation.hbs', require("./raw/tpl/navigation.hbs"))
   fs.writeFileSync('/helpers/tpl/pagination.hbs', require("./raw/tpl/pagination.hbs"))
   fs.writeFileSync('/public/public/jquery.min.js', require("./raw/jquery.min.js"))
+
+  installTheme('decent');
 }
 
 function _walkForZip(zip, path){
@@ -69,6 +72,65 @@ function makeZip() {
   }).catch(function (err){ console.error(err) });
 }
 
+
+function _collect_files_and_folders(files, folders, path){
+  fs.readdirSync(path).forEach(function(child){
+    var childFile = path + '/' + child
+    var stat = fs.statSync(childFile)
+    if (stat.isDirectory ()) {
+      folders.push(childFile)
+      _collect_files_and_folders(files, folders, childFile)
+    } else {
+      files.push(childFile)
+    }
+  })
+}
+
+function ignore_exists(err){
+  if (err.isSafeError && (err.status === -502 || err.status === -505)){
+    // -502: Directory Already Exists
+    // -505: File Already Exists
+    return true
+  }
+  throw err;
+}
+
+function _create_folders(safe, folders, opts){
+  let next = folders.shift()
+  console.log('Creating Folder', next);
+  return safe.createDirectory(next, opts
+    ).catch(ignore_exists
+    ).then(() =>
+      (folders.length) ? _create_folders(safe, folders, opts) : true
+  )
+}
+
+function _sync_files(safe, files, opts){
+  let next = files.shift()
+  content = fs.readFileSync(next).toString();
+  console.log('Creating File', next);
+  return safe.createFile(next, opts
+    ).catch(ignore_exists
+    ).then(
+      () => safe.updateFile( next, content, opts)).then(
+        () => (files.length) ? _sync_files(safe, files, opts) : true
+    )
+}
+
+function publish(safe){
+  var files=[], folders=[];
+  _collect_files_and_folders(files, folders, '/public')
+  console.log(files, folders)
+  let opts = {isPathShared: false, metadata: null};
+  return safe.createDirectory('/public', opts
+    ).catch(ignore_exists
+    ).then(
+      () => _create_folders(safe, folders, opts)
+    ).then(
+        () => _sync_files(safe, files, opts)
+    );
+}
+
 function installTheme (theme) {
     let fs = require("statical-ghost/lib/utils/fs-plus2.js")
     var copyFile = [{
@@ -85,4 +147,4 @@ function installTheme (theme) {
     })
 }
 
-export { makeZip, installTheme, initFS }
+export { makeZip, installTheme, initFS, publish }
