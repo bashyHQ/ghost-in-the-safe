@@ -1,3 +1,4 @@
+require('es6-promise').polyfill()
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Appbar from 'muicss/lib/react/appbar';
@@ -14,7 +15,6 @@ import ProgressBar from 'react-progressbar';
 import Editor from './editor.jsx';
 import render from './ghost.jsx';
 
-require('es6-promise').polyfill()
 require('muicss/lib/css/mui.min.css');
 require('./styles.css');
 let version = require('../package.json').version;

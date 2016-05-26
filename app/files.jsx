@@ -21,38 +21,63 @@ let JSZip = require('jszip');
 
 function initFS(safe, setupCb) {
   setupCb('checking infrastructure', 35);
-  // ensure the following paths exist
-  ['/files',
-   '/tmp',
-   '/helpers',
-   '/helpers/tpl',
-   '/posts',
-   '/public/assets',
-   '/public/public'
-  ].forEach(function (f, idx) {
-    try {
-      fs.mkdirSync(f)
-    } catch (EEXIST) { }
-  })
-
-  setupCb('ensuring files ', 40)
-  fs.writeFileSync('/types/mime.types', require("./raw/mime.types"))
-  fs.writeFileSync('/types/node.types', "")
-
-  fs.writeFileSync('/helpers/tpl/navigation.hbs', require("./raw/tpl/navigation.hbs"))
-  fs.writeFileSync('/helpers/tpl/pagination.hbs', require("./raw/tpl/pagination.hbs"))
-  fs.writeFileSync('/public/public/jquery.min.js', require("./raw/jquery.min.js"))
-
-  if (!fs.existsSync('/config.yaml')) {
-    setupCb('Creating initial setup: adding config', 42)
-    fs.writeFileSync('/config.yaml', require("./raw/default_config.yaml"))
-    setupCb('Creating initial setup: adding example post', 45)
-    fs.writeFileSync('/posts/example.md', require("./raw/example.md"))
-    setupCb('Creating initial setup: installing theme', 50)
-    installTheme('decent');
-  }
-
-  setupCb('infrastructure update done', 55)
+  return Promise.all(
+    ['/files',
+     '/tmp',
+     '/helpers',
+     '/helpers/tpl',
+     '/posts',
+     '/public/assets',
+     '/public/public'
+      ].map((f, idx) => new Promise((rs, rj) => {
+        fs.mkdir(f, (err) => rs()) // we don't care about problems
+      }))
+    ).then(() => {
+      setupCb('ensuring files ', 40)
+      return Promise.all([
+        Promise.all([
+          {name: '/types/mime.types',
+           content: require("./raw/mime.types")},
+          {name:'/types/node.types',
+           content:""},
+          {name:'/helpers/tpl/navigation.hbs',
+           content:require("./raw/tpl/navigation.hbs")},
+          {name:'/helpers/tpl/pagination.hbs',
+           content: require("./raw/tpl/pagination.hbs")},
+          {name: '/public/public/jquery.min.js',
+           content: require("./raw/jquery.min.js")}
+          ].map((f, idx) => new Promise((rs, rj) => {
+            fs.writeFile(f.name, f.content, (err) => {
+              err ? rj(err) : rs(f.name)
+            })
+          }))),
+        new Promise((rs, rj) => {
+          fs.exists('/config.yml', (exists) => {
+            if (exists) {
+              rs('/config.yml')
+              return
+            } else {
+              setupCb('Creating initial setup.', 45)
+              return Promise.all([
+                new Promise((rs, rj) =>
+                  fs.writeFile('/config.yaml',
+                               require("./raw/default_config.yaml"),
+                              () => rs())),
+                new Promise((rs, rj) =>
+                  fs.writeFile('/posts/example.md',
+                               require("./raw/example.md"),
+                              () => rs())),
+                installTheme('decent')
+              ]).then(() => {
+                setupCb('Setup done', 50)
+              })
+            }
+          })
+        })
+      ])
+    }).then(() => {
+      setupCb('infrastructure update done', 55)
+    });
 }
 
 function _walkForZip(zip, path){
@@ -137,18 +162,22 @@ function publish(safe){
 }
 
 function installTheme (theme) {
-    let fs = require("statical-ghost/lib/utils/fs-plus2.js")
-    var copyFile = [{
-      src: '/themes/' + theme + '/assets',
-      dst: '/public/assets/'
-    }, {
-      src: '/themes/' + theme + '/favicon.ico',
-      dst: '/public/favicon.ico'
-    }]
-    copyFile.forEach(function (copy) {
-      if (fs.existsSync(copy.src)) {
-        fs.copy(copy.src, copy.dst)
-      }
+    return new Promise((rs, rj) => {
+      // FIXME: make this actually async
+      let fs = require("statical-ghost/lib/utils/fs-plus2.js");
+      let copyFile = [{
+        src: '/themes/' + theme + '/assets',
+        dst: '/public/assets/'
+      }, {
+        src: '/themes/' + theme + '/favicon.ico',
+        dst: '/public/favicon.ico'
+      }]
+      copyFile.forEach(function (copy) {
+        if (fs.existsSync(copy.src)) {
+          fs.copy(copy.src, copy.dst)
+        }
+      })
+      rs()
     })
 }
 
