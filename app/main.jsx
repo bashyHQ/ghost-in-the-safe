@@ -59,12 +59,15 @@ class GitS extends React.Component {
 
   updateListing(){
     return new Promise((resolve, reject) => {
+      this.setState({setup_message: "loading posts and files", loadingProgres: 65});
       var otherDone = false;
       fs.readdir("/posts/", (err, files) => {
+        if (err) return reject(err)
         this.setState({posts: files, loadingProgres: 75});
         otherDone ? resolve() : otherDone = true;
       })
-      fs.readdir("/files/", (err, files)=> {
+      fs.readdir("/files/", (err, files) => {
+        if (err) return reject(err)
         this.setState({files: files, loadingProgres: 85});
         otherDone ? resolve() : otherDone = true;
       })
@@ -99,18 +102,23 @@ class GitS extends React.Component {
     // fs.watch("/files", ()=> this.updateListing())
 
     this.setState({"state": "authorising"})
-    this.props.safe.auth.authorize().then(() => {
+    this.props.safe.auth.authorize().then(
+      () => this.props.safe.auth.isAuth().then( (is_auth) => {
+        console.log(is_auth);
+        if (!is_auth)
+          throw("Access denied by SAFE launcher (please refresh to try again)")
+      })
+    ).then(() => {
         this.setState({"state": "setup", "loadingProgress": 30})
-        initFS(this.props.safe, (msg, progress) => {
+        initFS(this.props.safe.nfs, (msg, progress) => {
           this.setState({"setup_message": msg, "loadingProgress": progress})
-        })
-        this.updateListing().then(() => {
+        }).then(() => this.updateListing().then(() => {
           this.setState({"state": "ready", "loadingProgress": 100});
-        })
           this.refs.startupModal.hide()
-      }, (err) => {
+        })).catch(console.error.bind(console))
+      }).catch((err) => {
         this.setState({"state": "failed", "error": err})
-    });
+    })
   }
 
   componentDidMount(){

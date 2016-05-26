@@ -29,6 +29,9 @@ module.exports = {
 		},
 	plugins: [
 		new webpack.NoErrorsPlugin(),
+    new webpack.DefinePlugin({
+      RELEASE: true
+    })
   //   new webpack.ProvidePlugin({
   //     'fs': "window.fs",
   // })
