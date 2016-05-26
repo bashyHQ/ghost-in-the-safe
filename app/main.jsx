@@ -9,9 +9,12 @@ import Dropdown from 'muicss/lib/react/dropdown';
 import DropdownItem from 'muicss/lib/react/dropdown-item';
 
 import { makeZip, installTheme, initFS, publish } from './files.jsx';
+import { DropModal } from 'boron';
+import ProgressBar from 'react-progressbar';
 import Editor from './editor.jsx';
 import render from './ghost.jsx';
 
+require('es6-promise').polyfill()
 require('muicss/lib/css/mui.min.css');
 require('./styles.css');
 let version = require('../package.json').version;
@@ -55,12 +58,17 @@ class GitS extends React.Component {
   }
 
   updateListing(){
-    fs.readdir("/posts/", (err, files)=> {
-      this.setState({posts: files})
-    })
-    fs.readdir("/files/", (err, files)=> {
-      this.setState({files: files})
-    })
+    return new Promise((resolve, reject) => {
+      var otherDone = false;
+      fs.readdir("/posts/", (err, files) => {
+        this.setState({posts: files, loadingProgres: 75});
+        otherDone ? resolve() : otherDone = true;
+      })
+      fs.readdir("/files/", (err, files)=> {
+        this.setState({files: files, loadingProgres: 85});
+        otherDone ? resolve() : otherDone = true;
+      })
+    });
   }
 
   onEditorUpdate(){
@@ -68,7 +76,6 @@ class GitS extends React.Component {
   }
 
   compile(){
-    installTheme('decent');
     render();
   }
 
@@ -90,15 +97,26 @@ class GitS extends React.Component {
   componentWillMount(){
     // fs.watch("/posts", ()=> this.updateListing())
     // fs.watch("/files", ()=> this.updateListing())
-    this.updateListing()
+
     this.setState({"state": "authorising"})
     this.props.safe.auth.authorize().then(() => {
-        this.setState({"state": "setup"})
-        initFS(this.props.safe)
-        this.setState({"state": "ready"})
+        this.setState({"state": "setup", "loadingProgress": 30})
+        initFS(this.props.safe, (msg, progress) => {
+          this.setState({"setup_message": msg, "loadingProgress": progress})
+        })
+        this.updateListing().then(() => {
+          this.setState({"state": "ready", "loadingProgress": 100});
+        })
+          this.refs.startupModal.hide()
       }, (err) => {
         this.setState({"state": "failed", "error": err})
     });
+  }
+
+  componentDidMount(){
+    if (this.state != 'ready'){
+      this.refs.startupModal.show()
+    }
   }
 
   onSave(){
@@ -112,16 +130,34 @@ class GitS extends React.Component {
   render() {
     let state = this.state.state;
 
-    if (state === 'loading') {
-      return <div>Loading Ghost in the Safe ...</div>
-    } else if (state === 'authorising') {
-      return <div>Please authorise 'Ghost in the Safe' in your Safe Launcher!</div>
+    var startupModalContent = <p>Loading Ghost in the Safe ...</p>,
+        progress = 10;
+
+    if (state === 'authorising') {
+      startupModalContent = <p>Please authorise 'Ghost in the Safe' in your Safe Launcher!</p>;
+      progress = 25;
+    } else if (state === 'setup') {
+      startupModalContent = <p>{this.state.setup_message || "Reading your files"}</p>
+      progress = this.state.loadingProgress || 25;
     } else if (state === 'failed') {
-      return <div>Authorising failed: {this.state.error}</div>
+      startupModalContent = <p>Please authorise 'Ghost in the Safe' in your Safe Launcher!</p>;
+      progress = 30;
     }
 
     return (
       <div className={this.state.showSidedrawer ? 'show-sidedrawer' : 'hidden-sidedrawer'}>
+      <DropModal ref="startupModal" closeOnClick={false} keyboard={false}>
+        <div className="mui-container-fluid">
+          <div class="mui-panel">
+            <h3>Starting Ghost in the Safe</h3>
+            {startupModalContent}
+            <ProgressBar completed={progress} />
+          </div>
+        </div>
+      </DropModal>
+      <DropModal ref="buildingModal">
+
+      </DropModal>
       <div id="sidedrawer" className={this.state.showSidedrawer ? 'active' : 'hide'}>
         <nav>
           <div>

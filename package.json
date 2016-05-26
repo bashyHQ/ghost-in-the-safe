@@ -43,6 +43,7 @@
     "webpack-dev-server": "^2.1.0-beta.0"
   },
   "dependencies": {
+    "boron": "^0.2.3",
     "browserfs": "^0.5.12",
     "ghost-render": "^1.1.0",
     "glob": "^7.0.3",
@@ -52,6 +53,7 @@
     "muicss": "^0.5.9",
     "react": "^15.0.2",
     "react-dom": "^15.0.2",
+    "react-progressbar": "^1.2.0",
     "safenet": "0.0.1",
     "tweetnacl": "^0.14.3"
   }
