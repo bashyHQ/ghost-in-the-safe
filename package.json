@@ -5,7 +5,7 @@
   "scripts": {
     "build": "NODE_ENV=production webpack -p --config webpack.production.config.js --progress --profile",
     "dev": "webpack-dev-server --progress --profile --watch --hot",
-    "postinstall": "npm install lib/statical-ghost"
+    "postinstall": "npm install lib/statical-ghost lib/browserfs"
   },
   "repository": {
     "type": "git",
@@ -43,9 +43,11 @@
     "webpack-dev-server": "^2.1.0-beta.0"
   },
   "dependencies": {
+    "awesome-typescript-loader": "^0.17.0",
+    "bfs-buffer": "^0.1.7",
+    "bfs-path": "^0.1.2",
+    "bfs-process": "^0.1.6",
     "boron": "^0.2.3",
-    "browserfs": "^0.5.12",
-    "ghost-render": "^1.1.0",
     "glob": "^7.0.3",
     "handlebars": "^4.0.5",
     "jszip": "^3.0.0",
@@ -55,6 +57,8 @@
     "react-dom": "^15.0.2",
     "react-progressbar": "^1.2.0",
     "safenet": "0.0.1",
-    "tweetnacl": "^0.14.3"
+    "ts-loader": "^0.8.2",
+    "tweetnacl": "^0.14.3",
+    "typescript": "^1.8.10"
   }
 }

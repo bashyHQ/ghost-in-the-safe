@@ -1,4 +1,4 @@
-let BrowserFS = require('browserfs/dist/browserfs.min.js')
+let BrowserFS = require('../lib/browserfs/src/main.ts')
 
 BrowserFS.install(window)
 // Constructs an instance of the LocalStorage-backed file system.

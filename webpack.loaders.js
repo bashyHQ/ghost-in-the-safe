@@ -13,6 +13,10 @@ module.exports = [
 		exclude: /(node_modules|lib)/,
 		loaders: 'imports-loader',
 	},
+  {  // all files with a `.ts` or `.tsx` extension are typescript
+    test: /\.tsx?$/,
+    loader: 'awesome-typescript-loader'
+  },
 	{
 		test: /\.json$/,
 		loader: 'json-loader'

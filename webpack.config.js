@@ -15,8 +15,8 @@ module.exports = {
 	},
   externals: ['fs', {'./jszip': 'jszip'} ],
 	resolve: {
-		extensions: ['', '.js', '.jsx'],
-    modulesDirectories: ['node_modules']
+		extensions: ['', '.js', '.jsx', '.ts', '.tsx'],
+    modulesDirectories: ['node_modules', 'lib/browserfs/src']
 	},
 	module: {
 		loaders: loaders
