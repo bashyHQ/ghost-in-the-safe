@@ -4,3 +4,6 @@
 [submodule "lib/statical-ghost"]
 	path = lib/statical-ghost
 	url = https://github.com/ligthyear/statical-ghost.git
+[submodule "lib/browserfs"]
+	path = lib/browserfs
+	url = https://github.com/ligthyear/BrowserFS.git

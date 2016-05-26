@@ -1,10 +1,9 @@
-let render_tasks = require('statical-ghost/lib/task/')
-let View = require('statical-ghost/lib/view/')
-var baseModel = require('statical-ghost/lib/model/base_model')
+export default function render (input, output) {
+  let render_tasks = require('statical-ghost/lib/task/')
+  let View = require('statical-ghost/lib/view/')
+  var baseModel = require('statical-ghost/lib/model/base_model')
 
-let fs = require('fs')
-
-function render (input, output) {
+  let fs = require('fs')
   baseModel.init()
   render_tasks.getTasks().forEach(function (task, idx) {
     let view = View()
@@ -19,5 +18,3 @@ function render (input, output) {
     }
   })
 }
-
-export default render
