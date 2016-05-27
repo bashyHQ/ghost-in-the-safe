@@ -1,6 +1,6 @@
 {
   "name": "ghost-in-the-safe",
-  "version": "0.0.1",
+  "version": "0.7.0",
   "description": "Ghost in the (Maid)Safe is a browser-side-only ghost-themes CMS for the maidsafe network",
   "scripts": {
     "build": "NODE_ENV=production webpack -p --config webpack.production.config.js --progress --profile",
