@@ -133,15 +133,16 @@ function initFS(safeNfs, setupCb) {
               safeNfs.createDirectory('public', {}).catch(ignore_exists),
               safeNfs.createDirectory('files', {}).catch(ignore_exists)
             ]).then( () => syncToSafe(safeNfs,
-                  ['config.yaml', 'posts', 'files'], '')
+                  ['config.yaml', 'posts'], '')
             ).then(() => setupCb('Setup done', 45)
             ).then(rs).catch(rj)
           })
         })
         // FIXME: we should load custom themes here.
       ]).then(() => {
-        setupCb('Installing theme', 50)
-        return installTheme(require('../lib/statical-ghost/lib/config').theme)
+        let theme = require('../lib/statical-ghost/lib/config').theme;
+        setupCb('Installing theme: ' + theme, 50)
+        return installTheme(theme)
       }
       ).then(() => {
         setupCb('All files in place', 52)
