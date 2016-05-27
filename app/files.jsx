@@ -86,7 +86,7 @@ function initFS(safeNfs, setupCb) {
         fs.mkdir(f, (err) => rs()) // we don't care about problems
       ))
     ).then(() => syncFromSafe(safeNfs,
-      ['files', 'posts', 'public'],
+      ['files', 'posts'],
       ['config.yaml'],
       '').catch( () => true) // ignoring errors
     ).then(() => {
