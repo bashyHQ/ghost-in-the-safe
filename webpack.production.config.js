@@ -17,5 +17,11 @@ module.exports = {
 	},
 	module: {
 		loaders: loaders
-	}
+	},
+plugins: [
+  new webpack.NoErrorsPlugin(),
+  new webpack.DefinePlugin({
+    RELEASE: true
+  })
+]
 };
