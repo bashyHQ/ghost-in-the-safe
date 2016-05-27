@@ -38,12 +38,15 @@ class Editor extends React.Component{
   constructor(props){
     super(props)
     this.state = {
-      loading: false,
+      loading: true,
       content: null,
       config: {}
     }
-    if (props.filename){
-      this.load(filename)
+  }
+
+  componentDidMount() {
+    if (this.props.filename){
+      this.load(this.props.filename)
     }
   }
 
@@ -69,6 +72,7 @@ class Editor extends React.Component{
     if (!this.props.filename){
       return <div>Please select the file you want to edit</div>
     }
+    console.log(this.state.config)
     return (<Form className="mui-container-fluid" onSubmit={this.save.bind(this)}>
               <div style={{display: "flex"}}>
                 <legend><Input

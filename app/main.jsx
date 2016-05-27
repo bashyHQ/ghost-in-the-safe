@@ -14,6 +14,7 @@ import { DropModal } from 'boron';
 import ProgressBar from 'react-progressbar';
 import Editor from './editor.jsx';
 import render from './ghost.jsx';
+import ConfigEditor from './configuration.jsx';
 
 require('muicss/lib/css/mui.min.css');
 require('./styles.css');
@@ -48,6 +49,7 @@ class GitS extends React.Component {
       state: "loading",
       posts: [],
       files: [],
+      route: 'home',
       showPosts: true,
       showFiles: false,
       compileOnSave: true,
@@ -62,11 +64,13 @@ class GitS extends React.Component {
       this.setState({setup_message: "loading posts and files", loadingProgres: 65});
       var otherDone = false;
       fs.readdir("/posts/", (err, files) => {
+        console.log(err, files)
         if (err) return reject(err)
         this.setState({posts: files, loadingProgres: 75});
         otherDone ? resolve() : otherDone = true;
       })
       fs.readdir("/files/", (err, files) => {
+        console.log(err, files)
         if (err) return reject(err)
         this.setState({files: files, loadingProgres: 85});
         otherDone ? resolve() : otherDone = true;
@@ -103,7 +107,7 @@ class GitS extends React.Component {
   }
 
   selectPost(filename){
-    this.setState({selectedFile: filename})
+    this.setState({selectedFile: filename, route: 'editor'})
   }
 
   componentWillMount(){
@@ -183,7 +187,20 @@ class GitS extends React.Component {
   render() {
     let state = this.state.state;
 
-    var modalContent = <p>Loading Ghost in the Safe ...</p>;
+    var modalContent = <p>Loading Ghost in the Safe ...</p>,
+        mainContent = (<div>
+            <h1>Welcome</h1>
+            <h2>to Ghost in the Safe</h2>
+            <p>Please select a file from drawer on the left to edit</p>
+          </div>);
+
+    if (this.state.route === 'editor') {
+      mainContent = (<Editor
+          onSave={()=> this.onSave()}
+          filename={this.state.selectedFile} />);
+    } else if (this.state.route === 'config') {
+      mainContent = <ConfigEditor />;
+    }
 
     if (state === 'authorising') {
       modalContent = (<div>
@@ -276,21 +293,14 @@ class GitS extends React.Component {
           <span onClick={() => this.toggleSidedrawer()} className="sidedrawer-toggle icon">☰</span>
           <span className="mui--text-title">Ghost in the Safe</span>
           <Dropdown color="primary" label="actions">
-            <DropdownItem onClick={() => this.saveEditor()}>Configure</DropdownItem>
-            <DropdownItem >
-              <Checkbox
-                onChange={() => this.setState({compileOnSave: ! this.state.compileOnSave})}
-                checked={this.state.compileOnSave}
-                label="compile on save"
-              />
-            </DropdownItem>
+            <DropdownItem onClick={() => this.setState({route: "config"})}>Configure</DropdownItem>
             <DropdownItem onClick={() => this.publish()}>Publish</DropdownItem>
-            <DropdownItem onClick={() => this.export()}>Export</DropdownItem>
+            <DropdownItem onClick={() => this.export()}>Export as Zip</DropdownItem>
           </Dropdown>
         </Appbar>
       </header>
       <div id="content">
-        <Editor onSave={()=> this.onSave()} filename={this.state.selectedFile} />
+        {mainContent}
       </div>
       <footer id="footer">
         <Container fluid={true}>
