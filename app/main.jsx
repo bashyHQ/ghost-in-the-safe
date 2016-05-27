@@ -3,13 +3,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Appbar from 'muicss/lib/react/appbar';
 import Button from 'muicss/lib/react/button';
+import Input from 'muicss/lib/react/input';
 import Checkbox from 'muicss/lib/react/checkbox';
 import Container from 'muicss/lib/react/container';
 
 import Dropdown from 'muicss/lib/react/dropdown';
 import DropdownItem from 'muicss/lib/react/dropdown-item';
 
-import { makeZip, installTheme, initFS, publish, syncToSafe } from './files.jsx';
+import { makeZip, installTheme, initFS, publish, syncToSafe, createFile } from './files.jsx';
 import { DropModal } from 'boron';
 import ProgressBar from 'react-progressbar';
 import Editor from './editor.jsx';
@@ -83,22 +84,23 @@ class GitS extends React.Component {
   }
 
   compile(){
-    render();
+    return render();
   }
 
   publish() {
     this.refs.modal.show();
     this.setState({'state': 'compiling'})
-    this.compile()
-    this.setState({'state': 'publishing'})
-    publish(this.props.safe.nfs, '/public'
-      ).then(() => {
-        this.setState({'state': 'published'})
-        setTimeout(() => this.refs.modal.hide(), 3)
-      }
-    ).catch((err) => {
-      console.error(err);
-      this.setState({'state': 'build_error', 'error': err})
+    this.compile().then(()=>{
+      this.setState({'state': 'publishing'})
+      return publish(this.props.safe.nfs, '/public'
+        ).then(() => {
+          this.setState({'state': 'published'})
+          setTimeout(() => this.refs.modal.hide(), 3)
+        }
+      ).catch((err) => {
+        console.error(err);
+        this.setState({'state': 'build_error', 'error': err})
+      })
     })
   }
 
@@ -183,6 +185,22 @@ class GitS extends React.Component {
       this.compile();
     }
   }
+  createFile(){
+    let newFile = (this.state.new_file_name || '').trim();
+    if (!newFile){
+      alert("You need to specify a file name")
+      return;
+    }
+    console.log(newFile.slice(newFile.length -3))
+    if (newFile.slice(newFile.length -3) !== '.md'){
+      newFile += '.md'
+    }
+    return createFile(newFile).catch(console.error.bind(console)
+    ).then(() => {
+      this.setState({new_file_name: '', route: 'editor', selectedFile: newFile})
+      this.refs.addPostModal.hide()
+    }).then(() => this.updateListing())
+  }
 
   render() {
     let state = this.state.state;
@@ -252,6 +270,14 @@ class GitS extends React.Component {
 
     return (
       <div className={this.state.showSidedrawer ? 'show-sidedrawer' : 'hidden-sidedrawer'}>
+
+      <DropModal ref="addPostModal">
+        <h2>Create new Post</h2>
+        <Input defaultValue="another_example.md"
+            label="Filename"
+            onChange={(ev) => this.setState({new_file_name: ev.target.value})} />
+        <Button onClick={() => this.createFile()}>Create</Button>
+      </DropModal>
       <DropModal ref="modal" closeOnClick={false} keyboard={false}>
         <div className="mui-container-fluid">
           <div class="mui-panel">
@@ -267,7 +293,7 @@ class GitS extends React.Component {
           <div className="mui-divider"></div>
           <ul>
             <li>
-              <strong><span onClick={()=> this.setState({showPosts : !this.state.showPosts}) }>Posts</span><Button size="small" color="primary" variant="flat" onClick={() => this.addPost()}>+</Button></strong>
+              <strong><span onClick={()=> this.setState({showPosts : !this.state.showPosts}) }>Posts</span><Button size="small" color="primary" variant="flat" onClick={() => this.refs.addPostModal.show()}>+</Button></strong>
               <ul className={this.state.showPosts? 'show' : 'hide' }>{this.state.posts.map((f) =>
                 <li className={this.state.selectedFile == f ? 'selected' : ''}>
                   <a onClick={() => this.selectPost(f)}>{f}</a></li>

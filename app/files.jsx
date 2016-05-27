@@ -4,6 +4,7 @@ BrowserFS.install(window)
 // Constructs an instance of the LocalStorage-backed file system.
 
 var fsroot = new BrowserFS.FileSystem.MountableFileSystem()
+let example_post = require("./raw/example.md")
 
 fsroot.mount('/', new BrowserFS.FileSystem.InMemory())
 fsroot.mount('/types', new BrowserFS.FileSystem.InMemory())
@@ -47,6 +48,14 @@ function syncToSafe(safeNfs, files, path) {
         }).catch(rj)
     })
   })))
+}
+
+function createFile(fileName){
+  return new Promise((rs, rj)=>{
+    fs.writeFile('/posts/' + fileName, example_post, (err) => {
+      err ? rj(err): rs(fileName)
+    })
+  }).then(() => syncToSafe(window.Safe.nfs, [fileName], '/posts'))
 }
 
 function syncFromSafe(safeNfs, folders, files, path) {
@@ -119,9 +128,10 @@ function initFS(safeNfs, setupCb) {
                              require("./raw/default_config.yaml"),
                             () => rs())),
               new Promise((rs, rj) =>
-                fs.writeFile('/posts/example.md',
-                             require("./raw/example.md"),
-                            () => rs()))
+                fs.writeFile('/posts/example.md', example_post,
+                            () => rs())),
+              safeNfs.createDirectory('public', {}).catch(ignore_exists),
+              safeNfs.createDirectory('files', {}).catch(ignore_exists)
             ]).then( () => syncToSafe(safeNfs,
                   ['config.yaml', 'posts', 'files'], '')
             ).then(() => setupCb('Setup done', 45)
@@ -232,4 +242,4 @@ function installTheme (theme) {
     })
 }
 
-export { makeZip, installTheme, initFS, publish, syncToSafe }
+export { makeZip, installTheme, initFS, publish, syncToSafe, createFile }
