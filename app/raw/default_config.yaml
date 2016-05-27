@@ -14,7 +14,7 @@ theme: decent
 #   page: page
 posts:
   limit: 5   # the number of posts in each page
-  permalinks: '/:year/:month/:day/:slug/index.html' # link of post
+  permalinks: '/:year/:month/:day/:slug/' # link of post
 author: me # default author
 authors: #other authors
   me:
