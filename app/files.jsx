@@ -109,8 +109,8 @@ function initFS(safeNfs, setupCb) {
             })
           }))).catch(console.error.bind(console)),
         new Promise((rs, rj) => {
-          fs.exists('/config.yml', (exists) => {
-            if (exists) return rs('/config.yml') // we have a prior setup.
+          fs.exists('/config.yaml', (exists) => {
+            if (exists) return rs('/config.yaml') // we have a prior setup.
             setupCb('Creating initial setup.', 45)
             Promise.all([
               new Promise((rs, rj) =>
