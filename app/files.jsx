@@ -55,7 +55,9 @@ function syncFromSafe(safeNfs, folders, files, path) {
       return safeNfs.getDirectory(full_path, {}).then((resp) => new Promise((rs, rj) => {
         fs.mkdir(full_path, (err) => {
           syncFromSafe(safeNfs,
-              resp.subDirectories, resp.files, full_path + '/').then(rs).catch(rj)
+              resp.subDirectories.map((f) => f.name),
+              resp.files.map((f) => f.name),
+              full_path + '/').then(rs).catch(rj)
         })
       })).catch(console.error.bind(console))
     })),
