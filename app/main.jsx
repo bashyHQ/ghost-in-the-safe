@@ -9,7 +9,7 @@ import Container from 'muicss/lib/react/container';
 import Dropdown from 'muicss/lib/react/dropdown';
 import DropdownItem from 'muicss/lib/react/dropdown-item';
 
-import { makeZip, installTheme, initFS, publish } from './files.jsx';
+import { makeZip, installTheme, initFS, publish, syncToSafe } from './files.jsx';
 import { DropModal } from 'boron';
 import ProgressBar from 'react-progressbar';
 import Editor from './editor.jsx';
@@ -138,6 +138,40 @@ class GitS extends React.Component {
     }
   }
 
+  uploadFiles(){
+    // FileList doesn't have the normal Array-API, I mean, WHY SHOULD IT?
+    let fl = this.refs.fileUploader.files.length,
+        i = 0,
+        files = [];
+
+    while ( i < fl) {
+        files.push(this.refs.fileUploader.files[i]);
+        i++;
+    }
+    this.setState({state: 'uploading'})
+    this.refs.modal.show()
+    return Promise.all(
+      files.map( (f) => new Promise((rs, rj) => {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+          fs.writeFile("/files/" + f.name, e.target.result, (err) => {
+            err ? rj(err) : rs(f.name)
+          });
+        }
+        reader.readAsBinaryString(f);
+      }))
+    ).then((files) => {
+      console.log(files)
+      this.setState({loadingProgress: 75})
+      return Promise.all([
+        this.updateListing(),
+        syncToSafe(this.props.safe.nfs, files, '/files')
+      ])
+    }).then(() => {
+      this.refs.modal.hide()
+    }).catch(console.error.bind(console))
+  }
+
   onSave(){
     console.log("was saved");
     if (this.state.compileOnSave){
@@ -168,8 +202,13 @@ class GitS extends React.Component {
         <h2>Authorisation Failed</h2>
         <p>You've denied access to your Launcher. <br /><Button onClick={() => this.restart()} size="small" color="primary"> Try again </Button></p>
       </div>);
-
-    } else if (state === 'build_error') {
+    } else if (state === 'uploading') {
+      modalContent = (<div>
+        <h2>File upload in progress</h2>
+        <p>{this.state.modal_message || "Uploading"}</p>
+        <ProgressBar completed={this.state.loadingProgress || 25} />
+      </div>);
+    }  else if (state === 'build_error') {
       modalContent = (<div>
         <h2>Compiling failed:</h2>
         <p>{this.state.error.toString()}</p>
@@ -219,7 +258,11 @@ class GitS extends React.Component {
               </ul>
             </li>
             <li>
-              <strong><span onClick={()=> this.setState({showFiles : !this.state.showFiles}) }>Files</span><Button size="small" color="primary" variant="flat" onClick={() => this.addPost()}>+</Button></strong>
+              <input type="file"
+                    style={{"display":"none"}}
+                    ref="fileUploader"
+                    onChange={()=> this.uploadFiles()} />
+              <strong><span onClick={()=> this.setState({showFiles : !this.state.showFiles}) }>Files</span><Button size="small" color="primary" variant="flat" onClick={() => this.refs.fileUploader.click()}>+</Button></strong>
               <ul className={this.state.showFiles? 'show' : 'hide' }>{this.state.files.map((f) =>
                 <li><a href="#">{f}</a></li>
               )}

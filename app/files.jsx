@@ -5,7 +5,7 @@ BrowserFS.install(window)
 
 var fsroot = new BrowserFS.FileSystem.MountableFileSystem()
 
-fsroot.mount('/', new BrowserFS.FileSystem.LocalStorage())
+fsroot.mount('/', new BrowserFS.FileSystem.InMemory())
 fsroot.mount('/types', new BrowserFS.FileSystem.InMemory())
 fsroot.mount('/public', new BrowserFS.FileSystem.InMemory())
 fsroot.mount('/themes', new BrowserFS.FileSystem.InMemory())
@@ -23,15 +23,12 @@ BrowserFS.initialize(fsroot)
 let fs = window.fs = window.require('fs');
 let JSZip = require('jszip');
 
-function syncToSafe(safeNfs, files, path){
+function syncToSafe(safeNfs, files, path) {
   return Promise.all(files.map((f) => new Promise((rs, rj) => {
     // for every file given
     let cur_path = path + '/' + f;
     fs.stat(cur_path, (err, stat) => {
-      if (err || !stat){
-        console.log(cur_path + " not found: " + err)
-        return rs()
-      }
+      if (err || !stat) return rj(err)
       // we are a directory, create it and recursively sync
       if(stat.isDirectory())
         safeNfs.createDirectory(cur_path, {}
@@ -40,8 +37,7 @@ function syncToSafe(safeNfs, files, path){
             syncToSafe(safeNfs, files, cur_path
             ).then(rs).catch(rj)
           })).catch(rj)
-      else
-      // this is a file, sync it.
+      else // this is a file, sync it.
         safeNfs.createFile(cur_path, {}).catch(ignore_exists).then(() => {
           fs.readFile(cur_path, (err, content) => {
             safeNfs.updateFile(cur_path, content, {}
@@ -54,13 +50,11 @@ function syncToSafe(safeNfs, files, path){
 }
 
 function syncFromSafe(safeNfs, folders, files, path) {
-  console.log(folders, files, path);
   return Promise.all([
     Promise.all(folders.map((folder) => {
       let full_path = path + folder;
       return safeNfs.getDirectory(full_path, {}).then((resp) => new Promise((rs, rj) => {
         fs.mkdir(full_path, (err) => {
-          console.log(full_path, resp);
           syncFromSafe(safeNfs,
               resp.subDirectories.map((f) => f.name),
               resp.files.map((f) => f.name),
@@ -129,7 +123,7 @@ function initFS(safeNfs, setupCb) {
                              require("./raw/example.md"),
                             () => rs()))
             ]).then( () => syncToSafe(safeNfs,
-                  ['config.yaml', 'posts'], '')
+                  ['config.yaml', 'posts', 'files'], '')
             ).then(() => setupCb('Setup done', 45)
             ).then(rs).catch(rj)
           })
@@ -238,4 +232,4 @@ function installTheme (theme) {
     })
 }
 
-export { makeZip, installTheme, initFS, publish }
+export { makeZip, installTheme, initFS, publish, syncToSafe }
