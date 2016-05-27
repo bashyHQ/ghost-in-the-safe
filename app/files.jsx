@@ -9,9 +9,14 @@ fsroot.mount('/', new BrowserFS.FileSystem.LocalStorage())
 fsroot.mount('/types', new BrowserFS.FileSystem.InMemory())
 fsroot.mount('/public', new BrowserFS.FileSystem.InMemory())
 fsroot.mount('/themes', new BrowserFS.FileSystem.InMemory())
-fsroot.mount('/themes/frostmango', new BrowserFS.FileSystem.ZipFS(require('../lib/Frostmango-master.zip')))
 
-fsroot.mount('/themes/decent', new BrowserFS.FileSystem.ZipFS(require('../lib/decent-v1.1.1.zip')))
+fsroot.mount('/themes/apparition', new BrowserFS.FileSystem.ZipFS(require('../lib/themes/apparition.zip')))
+
+fsroot.mount('/themes/typography', new BrowserFS.FileSystem.ZipFS(require('../lib/themes/typography.zip')))
+
+fsroot.mount('/themes/frostmango', new BrowserFS.FileSystem.ZipFS(require('../lib/themes/frostmango.zip')))
+
+fsroot.mount('/themes/decent', new BrowserFS.FileSystem.ZipFS(require('../lib/themes/decent-v1.1.1.zip')))
 
 BrowserFS.initialize(fsroot)
 
@@ -49,11 +54,13 @@ function syncToSafe(safeNfs, files, path){
 }
 
 function syncFromSafe(safeNfs, folders, files, path) {
+  console.log(folders, files, path);
   return Promise.all([
     Promise.all(folders.map((folder) => {
       let full_path = path + folder;
       return safeNfs.getDirectory(full_path, {}).then((resp) => new Promise((rs, rj) => {
         fs.mkdir(full_path, (err) => {
+          console.log(full_path, resp);
           syncFromSafe(safeNfs,
               resp.subDirectories.map((f) => f.name),
               resp.files.map((f) => f.name),
@@ -123,7 +130,7 @@ function initFS(safeNfs, setupCb) {
                             () => rs())),
               installTheme('decent')
             ]).then( () => syncToSafe(safeNfs,
-                  ['config.yaml', 'posts', 'public'], '')
+                  ['config.yaml', 'posts'], '')
             ).then(() => setupCb('Setup done', 50)
             ).then(rs).catch(rj)
           })
