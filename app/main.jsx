@@ -53,7 +53,7 @@ class GitS extends React.Component {
       route: 'home',
       showPosts: true,
       showFiles: false,
-      compileOnSave: true,
+      compileOnSave: false
     }
   }
   toggleSidedrawer() {
@@ -179,9 +179,8 @@ class GitS extends React.Component {
   }
 
   onSave(){
-    console.log("was saved");
+    syncToSafe(this.props.safe.nfs, [this.state.selectedFile], '/posts')
     if (this.state.compileOnSave){
-      console.log("compiling");
       this.compile();
     }
   }
@@ -191,7 +190,7 @@ class GitS extends React.Component {
       alert("You need to specify a file name")
       return;
     }
-    console.log(newFile.slice(newFile.length -3))
+
     if (newFile.slice(newFile.length -3) !== '.md'){
       newFile += '.md'
     }
