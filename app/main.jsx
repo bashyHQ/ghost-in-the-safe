@@ -246,7 +246,9 @@ class GitS extends React.Component {
     }  else if (state === 'build_error') {
       modalContent = (<div>
         <h2>Compiling failed:</h2>
-        <p>{this.state.error.toString()}</p>
+        <p>{this.state.error.toString()} <Button onClick={() => this.refs.modal.hide()} size="small" color="primary"> Dismiss</Button>
+        </p>
+
       </div>);
     } else if (['compiling', 'publishing', 'published'].indexOf(state) > -1) {
       let config = require('statical-ghost/lib/config'),
