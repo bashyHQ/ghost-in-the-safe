@@ -127,15 +127,19 @@ function initFS(safeNfs, setupCb) {
               new Promise((rs, rj) =>
                 fs.writeFile('/posts/example.md',
                              require("./raw/example.md"),
-                            () => rs())),
-              installTheme('decent')
+                            () => rs()))
             ]).then( () => syncToSafe(safeNfs,
                   ['config.yaml', 'posts'], '')
-            ).then(() => setupCb('Setup done', 50)
+            ).then(() => setupCb('Setup done', 45)
             ).then(rs).catch(rj)
           })
         })
+        // FIXME: we should load custom themes here.
       ]).then(() => {
+        setupCb('Installing theme', 50)
+        return installTheme(require('../lib/statical-ghost/lib/config').theme)
+      }
+      ).then(() => {
         setupCb('All files in place', 52)
       })
     }).then(() => {
