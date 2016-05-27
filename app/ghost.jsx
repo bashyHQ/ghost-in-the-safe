@@ -5,16 +5,20 @@ export default function render (input, output) {
 
   let fs = require('fs')
   baseModel.init()
-  render_tasks.getTasks().forEach(function (task, idx) {
-    let view = View()
-    if (task.rss) {
-      fs.writeFile(task.path, task.rss, 'utf-8',
-        function (err) {
-          // FIXME: this currently fails
-          err && console.error(err)
-        })
-    } else {
-      view.render(task.tpl, task.context, task.context.relativeUrl)
-    }
-  })
+  return Promise.all(
+    render_tasks.getTasks().map((task, idx) => new Promise((rs, rj) => {
+      let view = View()
+      if (task.rss) {
+        fs.writeFile(task.path, task.rss, 'utf-8',
+          function (err) {
+            // FIXME: this currently fails
+            err && console.error(err)
+            rs()
+          })
+      } else {
+        view.render(task.tpl, task.context, task.context.relativeUrl)
+        rs()
+      }
+    })
+  ))
 }
