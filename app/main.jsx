@@ -107,8 +107,10 @@ class GitS extends React.Component {
   }
 
   componentWillMount(){
-    // fs.watch("/posts", ()=> this.updateListing())
-    // fs.watch("/files", ()=> this.updateListing())
+    this.restart()
+  }
+
+  restart(){
 
     this.setState({"state": "authorising"})
     this.props.safe.auth.authorize().then(
@@ -164,7 +166,7 @@ class GitS extends React.Component {
     } else if (state === 'startupFailed') {
       modalContent = (<div>
         <h2>Authorisation Failed</h2>
-        <p>You've denied access to your Launcher. (To retry, refresh!)</p>
+        <p>You've denied access to your Launcher. <br /><Button onClick={() => this.restart()} size="small" color="primary"> Try again </Button></p>
       </div>);
 
     } else if (state === 'build_error') {
