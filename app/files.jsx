@@ -202,7 +202,7 @@ function _sync_files(safe, files, opts){
 }
 
 function publish(safe){
-  return syncToSafe(safe, ['public'], '/')
+  return syncToSafe(safe, ['config.yaml', 'posts', 'public'], '/')
 }
 
 function installTheme (theme) {

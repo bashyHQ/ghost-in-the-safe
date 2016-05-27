@@ -83,10 +83,19 @@ class GitS extends React.Component {
   }
 
   publish() {
+    this.refs.modal.show();
+    this.setState({'state': 'compiling'})
     this.compile()
+    this.setState({'state': 'publishing'})
     publish(this.props.safe.nfs, '/public'
-      ).then(console.log.bind(console)
-    ).catch(console.error.bind(console))
+      ).then(() => {
+        this.setState({'state': 'published'})
+        setTimeout(() => this.refs.modal.hide(), 3)
+      }
+    ).catch((err) => {
+      console.error(err);
+      this.setState({'state': 'build_error', 'error': err})
+    })
   }
 
   export() {
@@ -114,16 +123,16 @@ class GitS extends React.Component {
           this.setState({"setup_message": msg, "loadingProgress": progress})
         }).then(() => this.updateListing().then(() => {
           this.setState({"state": "ready", "loadingProgress": 100});
-          this.refs.startupModal.hide()
+          this.refs.modal.hide()
         })).catch(console.error.bind(console))
       }).catch((err) => {
-        this.setState({"state": "failed", "error": err})
+        this.setState({"state": "startupFailed", "error": err})
     })
   }
 
   componentDidMount(){
     if (this.state != 'ready'){
-      this.refs.startupModal.show()
+      this.refs.modal.show()
     }
   }
 
@@ -138,33 +147,59 @@ class GitS extends React.Component {
   render() {
     let state = this.state.state;
 
-    var startupModalContent = <p>Loading Ghost in the Safe ...</p>,
-        progress = 10;
+    var modalContent = <p>Loading Ghost in the Safe ...</p>;
 
     if (state === 'authorising') {
-      startupModalContent = <p>Please authorise 'Ghost in the Safe' in your Safe Launcher!</p>;
-      progress = 25;
+      modalContent = (<div>
+        <h2>Starting Ghost in the Safe</h2>
+        <p>Please authorise 'Ghost in the Safe' in your Safe Launcher!</p>
+        <ProgressBar completed={25} />
+      </div>);
     } else if (state === 'setup') {
-      startupModalContent = <p>{this.state.setup_message || "Reading your files"}</p>
-      progress = this.state.loadingProgress || 25;
-    } else if (state === 'failed') {
-      startupModalContent = <p>Please authorise 'Ghost in the Safe' in your Safe Launcher!</p>;
-      progress = 30;
+      modalContent = (<div>
+        <h2>Starting Ghost in the Safe</h2>
+        <p>{this.state.setup_message || "Reading your files"}</p>
+        <ProgressBar completed={this.state.loadingProgress || 25} />
+      </div>);
+    } else if (state === 'startupFailed') {
+      modalContent = (<div>
+        <h2>Authorisation Failed</h2>
+        <p>You've denied access to your Launcher. (To retry, refresh!)</p>
+      </div>);
+
+    } else if (state === 'build_error') {
+      modalContent = (<div>
+        <h2>Compiling failed:</h2>
+        <p>{this.state.error.toString()}</p>
+      </div>);
+    } else if (['compiling', 'publishing', 'published'].indexOf(state) > -1) {
+      let config = require('statical-ghost/lib/config'),
+          url  = config.blog.url,
+          content = "All done!",
+          progress = 100;
+
+      if (state === 'compiling') {
+        content = "Compiling your content";
+        progress = 35;
+      } else if (state === 'publishing') {
+        content = "Transfering files to Safenetwork"
+        progress = 70;
+      }
+      modalContent = (<div>
+        <h2>Publishing</h2>
+        {content}
+        <ProgressBar completed={progress} />
+      </div>);
     }
 
     return (
       <div className={this.state.showSidedrawer ? 'show-sidedrawer' : 'hidden-sidedrawer'}>
-      <DropModal ref="startupModal" closeOnClick={false} keyboard={false}>
+      <DropModal ref="modal" closeOnClick={false} keyboard={false}>
         <div className="mui-container-fluid">
           <div class="mui-panel">
-            <h3>Starting Ghost in the Safe</h3>
-            {startupModalContent}
-            <ProgressBar completed={progress} />
+            {modalContent}
           </div>
         </div>
-      </DropModal>
-      <DropModal ref="buildingModal">
-
       </DropModal>
       <div id="sidedrawer" className={this.state.showSidedrawer ? 'active' : 'hide'}>
         <nav>
