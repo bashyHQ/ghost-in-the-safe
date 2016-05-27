@@ -118,8 +118,8 @@ function initFS(safeNfs, setupCb) {
               new Promise((rs, rj) =>
                 fs.writeFile('/posts/example.md',
                              require("./raw/example.md"),
-                            () => rs()))
-              // installTheme('decent')
+                            () => rs())),
+              installTheme('decent')
             ]).then( () => syncToSafe(safeNfs,
                   ['config.yaml', 'posts', 'public'], '')
             ).then(() => setupCb('Setup done', 50)
@@ -202,17 +202,7 @@ function _sync_files(safe, files, opts){
 }
 
 function publish(safe){
-  var files=[], folders=[];
-  _collect_files_and_folders(files, folders, '/public')
-  console.log(files, folders)
-  let opts = {isPathShared: false, metadata: null};
-  return safe.createDirectory('/public', opts
-    ).catch(ignore_exists
-    ).then(
-      () => _create_folders(safe, folders, opts)
-    ).then(
-        () => _sync_files(safe, files, opts)
-    );
+  return syncToSafe(safe, ['public'], '/')
 }
 
 function installTheme (theme) {
