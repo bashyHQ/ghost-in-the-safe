@@ -14,6 +14,10 @@ import Button from 'muicss/lib/react/button'
 import Panel from 'muicss/lib/react/panel'
 import Tabs from 'muicss/lib/react/tabs'
 import Tab from 'muicss/lib/react/tab'
+import DatePicker from 'react-datepicker'
+import moment from 'moment'
+
+require('react-datepicker/dist/react-datepicker.css')
 
 class PenWrap extends React.Component {
   render(){
@@ -93,12 +97,10 @@ class Editor extends React.Component{
                       onChange={(evt) => this.updateConfig('slug', evt.target.value)}
                       value={this.state.config.slug}
                       floatingLabel={true}/>
-                    <Input
-                      ref="date"
-                      label="Date (YYYY-MM-DD HH:MM:SS)"
-                      onChange={(evt) => this.updateConfig('date', evt.target.value)}
-                      value={this.state.config.date}
-                      floatingLabel={true}/>
+                    <DatePicker
+                      todayButton='today'
+                      selected={moment(this.state.config.date)}
+                      onChange={(evt) => this.updateConfig('date', evt.toString())} />
                     <Input
                       ref="author"
                       label="Author"
