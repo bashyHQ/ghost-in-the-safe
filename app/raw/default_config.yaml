@@ -1,5 +1,5 @@
 blog:
-  url: '/'
+  url: ''
   title: Hello World
   description: Keep It Simple and Stupid.
   logo: ''
@@ -12,13 +12,6 @@ theme: decent
 #   tag: tag
 #   author: author
 #   page: page
-paths:
-  # subdir: 'blog'    #subdir for all urls, like "http://localhost:8080/blog/author/me"
-  # imagesRelPath: '' not use yet
-  posts: /posts # directory for your posts
-  public: /public # directory for generated site
-  tmp: /tmp # temp directory for speed up
-  themes: /themes # directory for themes
 posts:
   limit: 5   # the number of posts in each page
   permalinks: '/:year/:month/:day/:slug/' # link of post
