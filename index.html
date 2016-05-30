@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Ghost-in-the-safe by bashyHQ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Ghost-in-the-safe</h1>
+      <h2 class="project-tagline">Beautiful publishing for the Safenetwork –  Ghost Themes. Blogging. Markdown. Static Rendering.</h2>
+      <a href="https://github.com/bashyHQ/ghost-in-the-safe" class="btn">View on GitHub</a>
+      <a href="https://github.com/bashyHQ/ghost-in-the-safe/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/bashyHQ/ghost-in-the-safe/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="ghost-in-the-safe" class="anchor" href="#ghost-in-the-safe" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Ghost in the Safe</h1>
+
+<p>is an experimental (blog) publishing platforms for the safenetwork (build by maidsafe). It is hosted on the network itself and runs only in the browser, thus allowing to be used as a fully distributed WebApp without any servers, yet the publishing tool on the network itself.</p>
+
+<p>See it in action (<a href="https://webm.lol/v/1z4588a217">click here to see the video</a>):</p>
+
+<p>
+    
+    </p>
+
+<pre><code>&lt;em&gt;Video failed to load. &lt;a href="https://webm.lol/v/1z4588a217"&gt;Try here&lt;/a&gt;&lt;/em&gt;
+</code></pre>
+
+<p></p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>Just connect to the <a href="https://forum.safenetwork.io/t/stable-droplet-test-network/9444/11">stable droplet test network provided by maidsafe</a> and click the following link to start the app – <strong>proceed with caution, this is only a conceptual prototype</strong>:</p>
+
+<h1>
+<a id="launch-ghost-in-the-safe-07" class="anchor" href="#launch-ghost-in-the-safe-07" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>launch <a href="http://app.ghost07.safenet">'Ghost in the Safe' 0.7</a>
+</h1>
+
+<h2>
+<a id="goal" class="anchor" href="#goal" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Goal</h2>
+
+<p>The goal of 'Ghost in the Safe' is to provide easy, intuitive and beautiful content publishing and blogging to the safe network for anyone to start their website with. As the safe network operates completely without servers all classic approaches to this – like Wordpress or Ghost – are out of the questions and many static-site-generator are just not non-coder-friendly-enough to find mass-audience acceptance.</p>
+
+<p>However, Ghost themes themselves use a similar approach and all of their – magnificently beautiful – themes can actually be statically build, using a Templateing-language completely written in javascript: handlebars (initially even for the browser rather than the server). Those in combination with the choice of using the really simple markdown language to provide text editing made the ghost system the weapon of choice: <strong>Markdown-Files compiled statically with a Javascript-written Templating language using Beautiful Designs</strong> – with a [flourishing marketplace for themes])(<a href="http://marketplace.ghost.org/">http://marketplace.ghost.org/</a>).</p>
+
+<p>Thus, by version 1.0 'Ghost in the Safe' attempts to be 100% ghost-themes-compatible.</p>
+
+<h2>
+<a id="development-decisions" class="anchor" href="#development-decisions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Development decisions</h2>
+
+<p>This is the work of less than 10 days hacking together a concept study to proof that a browser-based publishing tool for and within the maidsafe safenetwork is technically possible and feasible. At it currently stands for its first release (version 0.7), this has been proven and the results are there for anyone to test. For that – let's call it what it is – hack, the following design decisions had been taken:</p>
+
+<ul>
+<li>We are using a fork of the <a href="https://github.com/ligthyear/statical-ghost">statical-ghost</a> to compile the markdown files with the ghosts templates into websites. We had to fork the project to make some fixes coming from assuming file-system-behaviour we can't provide</li>
+<li>We are currently using <a href="https://github.com/ligthyear/BrowserFS">BrowserFS</a> with an in-memory-storage-system to allow statical-ghost to run as it needs to</li>
+<li>We rely heavily on the <a href="https://github.com/eblanshey/safenet">safenet javascript library</a> to connect to the network and sync files between maidsafe and the browser</li>
+<li>For the editor, we rely on the awesome <a href="https://github.com/sofish/pen">Pen</a>-Editor</li>
+<li>For the GUI we are using <a href="http://facebook.github.io/react/">React</a> and <a href="https://www.muicss.com/">MUI-CSS</a> to give it a nice look and feel</li>
+<li>We are shipping with a few themes as internal-zip-files</li>
+<li>all this is barely <a href="http://thinkexist.com/quotation/duct_tape_is_like_the_force-it_has_a_light_side-a/217542.html">held together with duct tape</a> and hacks.</li>
+</ul>
+
+<h3>
+<a id="versioning" class="anchor" href="#versioning" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Versioning</h3>
+
+<p>This Software is using <a href="http://blog.appliedcompscilab.com/monotonic_versioning_manifesto/">Monotonic Versioning</a> (for the package.json in the Semantic Versioning Compatibility Mode with an additional <code>.0</code>). Each minor or major release is defined by being published on the <a href="https://forum.safenetwork.io/t/stable-droplet-test-network/9444/11">maidsafe (test) network</a>.</p>
+
+<h2>
+<a id="work-to-come" class="anchor" href="#work-to-come" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Work to Come</h2>
+
+<h2>
+<a id="while-pre-10" class="anchor" href="#while-pre-10" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>While pre 1.0</h2>
+
+<p>These are some known issues. However, as this was only meant to be a concept study they may or may not get fixed before version 1.0. If you happen to want to fix any one of them, we are accepting pull-requests:</p>
+
+<ul>
+<li>[ ] When the Safe Launcher runs out of space, the app is screwed</li>
+<li>[ ] We have troubles sending binary data to the safe launcher</li>
+<li>[ ] The DNS-Name generator can't be reached by clicking (you have to tab there)</li>
+<li>[ ] We can only publish one project per account at the moment</li>
+<li>[x] we can't create new posts</li>
+<li>[x] we can't upload files</li>
+<li>[ ] There are files, but they aren't published</li>
+<li>[ ] files nor posts can be deleted</li>
+<li>[ ] posts can't be set to be draft</li>
+<li>[ ] momentjs seems to cause hick ups on post Metadata</li>
+<li>[ ] there appear to be unicode encoding issues in posts, which duplicate for every write-read-cycle</li>
+<li>[ ] the editor doesn't switch between files properly, showing old files at times</li>
+<li>[ ] the editor doesn't have any way to easily link to our files / should link on click in side-drawer</li>
+<li>[ ] there is no preview of files
+
+<ul>
+<li>[ ] neither in the editor</li>
+<li>[ ] nor when selecting them in the drawer</li>
+</ul>
+</li>
+<li>[ ] the side drawer should highlight the selected post we editing</li>
+<li>[ ] configuration is missing many options:
+
+<ul>
+<li>[ ] managing authors</li>
+<li>[ ] managing tags</li>
+<li>[ ] image upload: logos / favicons / authors</li>
+</ul>
+</li>
+<li>[ ] RSS doesn't compile (though, do we need that on safenet?)</li>
+</ul>
+
+<h2>
+<a id="version-10" class="anchor" href="#version-10" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Version 1.0</h2>
+
+<p>However, because of the nature of this project as a concept study, this prototype is in no shape to be maintainable in its current form. It is bloated and big, hacky on every corner and uses way to many huge dependencies. For a feature complete (and maintainable) version 1.0 the internal structure and code must be completely rewritten. This is what I have in mind about this right now:</p>
+
+<ul>
+<li>[ ] Build an offline-first local-storage-based safenetwork syncing layer</li>
+<li>[ ] Complete rewrite of the system
+
+<ul>
+<li>[ ] Drop BrowserFS, statical-ghost</li>
+<li>[ ] our own implementation of a ghost-theme-renderer using the new syncing-layer and handlebars directly</li>
+</ul>
+</li>
+<li>[ ] highly improved UI</li>
+<li>[ ] multi-project support</li>
+<li>[ ] sub-directory support</li>
+<li>[ ] proper logo, design and brand</li>
+</ul>
+
+<h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributing</h2>
+
+<p>Please fill away your issues and problems, and for any of the above mentioned Pull-Requests are highly welcomes. However bigger changes will only be accepted towards version 1.0, which will also be the focus for further work.</p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p>© 2016, Benjamin Kampmann for <a href="http://www.bashy.io">The Bashy Initiative</a></p>
+
+<p>This projects is licensed under AGPL 3.0. See the <a href="./LICENSE">LICENSE File</a> in this directory for more the full text. In short this license states that the software is provided as is, that the authors and distributors do not give any guarantees but that you can use, distribute and change it as you please as long as you keep it under the same license. This license further more requires you to also give anyone access to the source code – including your changes – for whom you make this available as a compiled version or offer via a telecommunication service (you run it for anyone else, you have to provide the source!).</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/bashyHQ/ghost-in-the-safe">Ghost-in-the-safe</a> is maintained by <a href="https://github.com/bashyHQ">bashyHQ</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
