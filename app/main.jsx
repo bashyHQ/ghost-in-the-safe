@@ -20,6 +20,11 @@ import ConfigEditor from './configuration.jsx';
 require('muicss/lib/css/mui.min.css');
 require('./styles.css');
 let version = require('../package.json').version;
+
+// we need to patch first
+import { Request } from 'safenet/src/request';
+Request.baseUrl = "http://api.safenet/0.5";
+
 require('safenet/src/index.js');
 
 let SafeApp = window.SafeApp;
