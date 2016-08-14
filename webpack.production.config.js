@@ -6,6 +6,10 @@ module.exports = {
 	entry: [
 		'./app/main.jsx' // Your appʼs entry point
 	],
+  target: 'web',
+	node: {
+		Buffer: true
+	},
 	output: {
 		path: path.join(__dirname, 'public'),
 		filename: 'app.js'

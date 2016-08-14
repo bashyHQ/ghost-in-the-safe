@@ -8,6 +8,10 @@ module.exports = {
 		'webpack/hot/only-dev-server',
 		'./app/main.jsx' // Your appʼs entry point
 	],
+  target: 'web',
+	node: {
+		Buffer: true
+	},
 	devtool: process.env.WEBPACK_DEVTOOL || 'source-map',
 	output: {
 		path: path.join(__dirname, 'public'),

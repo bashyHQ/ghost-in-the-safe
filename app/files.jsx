@@ -1,4 +1,5 @@
 let BrowserFS = require('../lib/browserfs/src/main.ts')
+let Buffer = require('buffer').Buffer
 
 BrowserFS.install(window)
 // Constructs an instance of the LocalStorage-backed file system.
@@ -11,13 +12,14 @@ fsroot.mount('/types', new BrowserFS.FileSystem.InMemory())
 fsroot.mount('/public', new BrowserFS.FileSystem.InMemory())
 fsroot.mount('/themes', new BrowserFS.FileSystem.InMemory())
 
-// fsroot.mount('/themes/apparition', new BrowserFS.FileSystem.ZipFS(require('../lib/themes/apparition.zip')))
+fsroot.mount('/themes/apparition', new BrowserFS.FileSystem.ZipFS(new Buffer(require('../lib/themes/apparition.zip'), 'binary')))
 
-// fsroot.mount('/themes/typography', new BrowserFS.FileSystem.ZipFS(require('../lib/themes/typography.zip')))
+fsroot.mount('/themes/typography', new BrowserFS.FileSystem.ZipFS(new Buffer(require('../lib/themes/typography.zip'), 'binary')))
 
-// fsroot.mount('/themes/frostmango', new BrowserFS.FileSystem.ZipFS(require('../lib/themes/frostmango.zip')))
+fsroot.mount('/themes/frostmango', new BrowserFS.FileSystem.ZipFS(new Buffer(require('../lib/themes/frostmango.zip'), 'binary')))
 
-// fsroot.mount('/themes/decent', new BrowserFS.FileSystem.ZipFS(require('../lib/themes/decent-v1.1.1.zip')))
+fsroot.mount('/themes/decent', new BrowserFS.FileSystem.ZipFS(
+    new Buffer(require('../lib/themes/decent-v1.1.1.zip'), 'binary')))
 
 BrowserFS.initialize(fsroot)
 

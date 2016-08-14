@@ -23,7 +23,7 @@ module.exports = [
 	},
 	{
 		test: /\.zip$/,
-		loader: 'buffer-loader'
+		loader: 'binary-loader'
 	},
 	{
 		test: /\.css$/,
