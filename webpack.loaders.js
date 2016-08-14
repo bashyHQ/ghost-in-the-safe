@@ -1,3 +1,4 @@
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = [
 	{
 		test: /(app\/raw\/.*|\.yaml$)/,
@@ -27,7 +28,7 @@ module.exports = [
 	},
 	{
 		test: /\.css$/,
-		loader: 'style-loader!css-loader'
+		loader: ExtractTextPlugin.extract("style-loader", "css-loader")
 	},
 	{
 		test: /\.eot(\?.*)?$/,

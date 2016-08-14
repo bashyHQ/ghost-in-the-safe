@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var path = require('path');
 var loaders = require('./webpack.loaders');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
 	entry: [
@@ -24,6 +25,7 @@ module.exports = {
 	},
 plugins: [
   new webpack.NoErrorsPlugin(),
+  new ExtractTextPlugin("styles.css"),
   new webpack.DefinePlugin({
     RELEASE: true
   })
