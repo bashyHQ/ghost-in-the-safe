@@ -1,4 +1,4 @@
-require('../lib/pen/src/pen.css')
+// require('../lib/pen/src/pen.css')
 require('../lib/pen/src/pen.js')
 require('../lib/pen/src/markdown.js')
 
@@ -17,7 +17,7 @@ import Tab from 'muicss/lib/react/tab'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
 
-require('react-datepicker/dist/react-datepicker.css')
+// require('react-datepicker/dist/react-datepicker.css')
 
 class PenWrap extends React.Component {
   render(){

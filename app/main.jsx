@@ -17,8 +17,6 @@ import Editor from './editor.jsx';
 import render from './ghost.jsx';
 import ConfigEditor from './configuration.jsx';
 
-require('muicss/lib/css/mui.min.css');
-require('./styles.css');
 let version = require('../package.json').version;
 
 // we need to patch first
@@ -28,7 +26,6 @@ Request.baseUrl = "http://api.safenet/0.5";
 require('safenet/src/index.js');
 
 let SafeApp = window.SafeApp;
-console.log(SafeApp);
 
 
 SafeApp.log = console.log.bind(console);
