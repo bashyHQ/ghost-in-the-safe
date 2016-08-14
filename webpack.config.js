@@ -7,7 +7,8 @@ module.exports = {
 	entry: [
 		'webpack-dev-server/client?http://0.0.0.0:8080', // WebpackDevServer host and port
 		'webpack/hot/only-dev-server',
-		'./app/main.jsx' // Your appʼs entry point
+		'./app/main.jsx',
+    './app/styles.css'
 	],
   target: 'web',
 	node: {
