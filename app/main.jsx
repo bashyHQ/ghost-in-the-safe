@@ -11,7 +11,7 @@ import Dropdown from 'muicss/lib/react/dropdown';
 import DropdownItem from 'muicss/lib/react/dropdown-item';
 
 import { makeZip, installTheme, initFS, publish, syncToSafe, createFile } from './files.jsx';
-import { DropModal } from 'boron';
+import Modal from './modal.jsx';
 import ProgressBar from 'react-progressbar';
 import Editor from './editor.jsx';
 import render from './ghost.jsx';
@@ -274,20 +274,20 @@ class GitS extends React.Component {
     return (
       <div className={this.state.showSidedrawer ? 'show-sidedrawer' : 'hidden-sidedrawer'}>
 
-      <DropModal ref="addPostModal">
+      <Modal ref="addPostModal">
         <h2>Create new Post</h2>
         <Input defaultValue="another_example.md"
             label="Filename"
             onChange={(ev) => this.setState({new_file_name: ev.target.value})} />
         <Button onClick={() => this.createFile()}>Create</Button>
-      </DropModal>
-      <DropModal ref="modal" closeOnClick={false} keyboard={false}>
+      </Modal>
+      <Modal ref="modal" closeOnClick={false}>
         <div className="mui-container-fluid">
           <div class="mui-panel">
             {modalContent}
           </div>
         </div>
-      </DropModal>
+      </Modal>
       <div id="sidedrawer" className={this.state.showSidedrawer ? 'active' : 'hide'}>
         <nav>
           <div>

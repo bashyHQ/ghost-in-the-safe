@@ -10,7 +10,7 @@ import Tabs from 'muicss/lib/react/tabs'
 import Tab from 'muicss/lib/react/tab'
 
 import { installTheme, syncToSafe } from './files.jsx'
-import { DropModal } from 'boron';
+import Modal from './modal.jsx';
 
 class Configuration extends React.Component{
   constructor(props){
@@ -109,7 +109,7 @@ class Configuration extends React.Component{
 
   render() {
     return (<div>
-      <DropModal ref="modal">
+      <Modal ref="modal">
 
           <Input label="Service"
                 ref="service"
@@ -128,7 +128,7 @@ class Configuration extends React.Component{
           .safenet
           <Button onClick={() => this.publish()} >publish</Button>
 
-      </DropModal>
+      </Modal>
 
         <Panel>
           <Button variant="raised" onClick={this.save.bind(this)} color="primary">Save </Button>
