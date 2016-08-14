@@ -11,13 +11,13 @@ fsroot.mount('/types', new BrowserFS.FileSystem.InMemory())
 fsroot.mount('/public', new BrowserFS.FileSystem.InMemory())
 fsroot.mount('/themes', new BrowserFS.FileSystem.InMemory())
 
-fsroot.mount('/themes/apparition', new BrowserFS.FileSystem.ZipFS(require('../lib/themes/apparition.zip')))
+// fsroot.mount('/themes/apparition', new BrowserFS.FileSystem.ZipFS(require('../lib/themes/apparition.zip')))
 
 // fsroot.mount('/themes/typography', new BrowserFS.FileSystem.ZipFS(require('../lib/themes/typography.zip')))
 
-fsroot.mount('/themes/frostmango', new BrowserFS.FileSystem.ZipFS(require('../lib/themes/frostmango.zip')))
+// fsroot.mount('/themes/frostmango', new BrowserFS.FileSystem.ZipFS(require('../lib/themes/frostmango.zip')))
 
-fsroot.mount('/themes/decent', new BrowserFS.FileSystem.ZipFS(require('../lib/themes/decent-v1.1.1.zip')))
+// fsroot.mount('/themes/decent', new BrowserFS.FileSystem.ZipFS(require('../lib/themes/decent-v1.1.1.zip')))
 
 BrowserFS.initialize(fsroot)
 
