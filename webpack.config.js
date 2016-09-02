@@ -29,15 +29,20 @@ module.exports = {
 	},
 	devServer: {
 		contentBase: "./public",
-			noInfo: true, //  --no-info option
-			hot: true,
-			inline: true
-		},
+		noInfo: true, //  --no-info option
+		hot: true,
+		inline: true,
+    proxy: {
+      '/0.5*': {
+        'target': 'http://localhost:8100/'
+      }
+    }
+	},
 	plugins: [
 		new webpack.NoErrorsPlugin(),
     new ExtractTextPlugin("styles.css"),
     new webpack.DefinePlugin({
-      RELEASE: true
+      RELEASE: false
     })
   //   new webpack.ProvidePlugin({
   //     'fs': "window.fs",

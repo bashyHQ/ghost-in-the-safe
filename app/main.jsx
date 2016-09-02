@@ -16,12 +16,16 @@ import ProgressBar from 'react-progressbar';
 import Editor from './editor.jsx';
 import render from './ghost.jsx';
 import ConfigEditor from './configuration.jsx';
+import { Request } from 'safenet/src/request';
 
 let version = require('../package.json').version;
 
 // we need to patch first
-import { Request } from 'safenet/src/request';
-Request.baseUrl = "http://api.safenet/0.5";
+if (RELEASE) {
+  Request.baseUrl = "http://api.safenet/0.5";
+} else {
+  Request.baseUrl = "/0.5";
+}
 
 require('safenet/src/index.js');
 
